@@ -7,6 +7,7 @@ import userRouter from "./routes/userRouter";
 import specialtyRouter from "./routes/specialtyRouter";
 import speciesRouter from "./routes/speciesRouter";
 import categoryRouter from "./routes/categoryRouter";
+import petRouter from "./routes/petRouter";
 
 const app: Application = express();
 
@@ -30,5 +31,13 @@ app.use("/api/user",userRouter)
 app.use("/api/specialty", specialtyRouter)
 app.use("/api/species", speciesRouter)
 app.use("/api/category", categoryRouter)
+app.use("/api/pet", petRouter)
+
+app.use((req,res) => {
+    res.status(404).json({
+        status: "NOT FOUND",
+        msg: "La petición realizada no existe"
+    })
+})
 
 export default app;
