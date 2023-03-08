@@ -1,6 +1,9 @@
+import fs from 'node:fs';
+import { UploadApiResponse } from 'cloudinary';
+import { subirImagen } from './../libs/configCloudinary';
 import { Result } from 'express-validator';
 import { validationResult } from 'express-validator';
-import { getPetsQuery } from './../libs/queries/petQuery';
+import { getPetsQuery, addPetQuery, updatePetQuery } from './../libs/queries/petQuery';
 import pool from "./../database";
 import { Request, Response } from "express";
 
@@ -30,13 +33,41 @@ export const addPet = async(req: Request,res: Response): Promise<Response> => {
 
         const err: Result = validationResult(req);
 
-        if (!err.isEmpty()) return res.status(400).json({
-            status: "FAILED",
-            msg: err.array()[0]?.msg,
-            data: err.array()
-        })
+        if (!err.isEmpty()) {
 
-        return res.status(201).json({msg: "AGREGADO"});
+            if (req.file){
+                fs.unlink(req.file.path, (err) => {
+                    console.log(err);                    
+                })
+            }
+
+            return res.status(400).json({
+                status: "FAILED",
+                msg: err.array()[0]?.msg,
+                data: err.array()
+            })
+        }
+
+        const { namePet = "", agePet = "", sexPet = "", weightPet = "", idSpecies = "", idUser = "" } = req.body;
+
+        console.log(req.file);
+
+        if (!req.file){
+            return res.status(400).json({
+                status: "FAILED",
+                msg: "La foto no puede estar vacio"
+            })
+        }
+
+        const imagenSubida: UploadApiResponse = await subirImagen(req.file.path);
+
+        const addedPet: any = await pool.query(addPetQuery, [namePet, agePet, sexPet, weightPet, imagenSubida.secure_url, idSpecies, idUser])
+
+        return res.status(201).json({
+            status: "OK",
+            msg: "La mascota se registró correctamente",
+            data: addedPet[0]
+        });
         
     } catch (error) {
         console.log(error);
@@ -48,9 +79,28 @@ export const addPet = async(req: Request,res: Response): Promise<Response> => {
     }
 }
 
-const updatePet = async (req: Request,res: Response) => {
+export const updatePet = async (req: Request,res: Response) => {
     try {
         
+        const err: Result = validationResult(req);
+
+        if (!err.isEmpty()) return res.status(400).json({
+            status: "FAILED",
+            msg: err.array()[0]?.msg,
+            data: err.array()
+        })
+        
+        const { idPet } = req.params;
+        const { namePet = "", agePet = "", sexPet = "", weightPet = "", idSpecies = "", idUser = "" } = req.body;
+
+        const updatedPet: any = await pool.query(updatePetQuery,[namePet, agePet, sexPet, weightPet, idSpecies, idUser, idPet])
+
+        return res.status(201).json({
+            status: "OK",
+            msg: "La mascota se actualizó correctamente",
+            data: updatedPet[0]
+        })
+
     } catch (error) {
         console.log(error);
         return res.status(500).json({
