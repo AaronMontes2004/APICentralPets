@@ -8,6 +8,8 @@ import specialtyRouter from "./routes/specialtyRouter";
 import speciesRouter from "./routes/speciesRouter";
 import categoryRouter from "./routes/categoryRouter";
 import petRouter from "./routes/petRouter";
+import productRouter from "./routes/productRouter";
+import vetRouter from "./routes/VetRouter";
 
 const app: Application = express();
 
@@ -32,6 +34,8 @@ app.use("/api/specialty", specialtyRouter)
 app.use("/api/species", speciesRouter)
 app.use("/api/category", categoryRouter)
 app.use("/api/pet", petRouter)
+app.use("/api/product", productRouter)
+app.use("/api/vet", vetRouter)
 
 app.use((req,res) => {
     res.status(404).json({

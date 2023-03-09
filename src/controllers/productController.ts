@@ -1,23 +1,20 @@
-import fs from 'node:fs';
-import { UploadApiResponse } from 'cloudinary';
 import { subirImagen } from './../libs/configCloudinary';
-import { Result } from 'express-validator';
-import { validationResult } from 'express-validator';
-import { getPetsQuery, addPetQuery, updatePetQuery } from './../libs/queries/petQuery';
+import fs from 'node:fs';
+import { getProductsQuery, addProductQuery, updateProductQuery } from './../libs/queries/productQuery';
 import pool from "./../database";
 import { Request, Response } from "express";
+import { Result, validationResult } from 'express-validator';
+import { UploadApiResponse } from 'cloudinary';
 
-export const getPets = async(req: Request,res: Response): Promise<Response> => {
+export const getProducts = async (req: Request,res: Response): Promise<Response> => {
     try {
-
-        const petsObtained: any = await pool.query(getPetsQuery);
+        const productosObtained: any = await pool.query(getProductsQuery)
 
         return res.status(200).json({
             status: "OK",
-            msg: "Se obtuvieron las mascotas exitosamente",
-            data: petsObtained[0]
+            msg: "Se obtuvieron los productos exitosamente",
+            data: productosObtained[0]
         })
-        
     } catch (error) {
         console.log(error);
         return res.status(500).json({
@@ -28,12 +25,11 @@ export const getPets = async(req: Request,res: Response): Promise<Response> => {
     }
 }
 
-export const addPet = async(req: Request,res: Response): Promise<Response> => {
+export const addProduct = async(req: Request,res: Response): Promise<Response> => {
     try {
+        const err: Result = validationResult(req)
 
-        const err: Result = validationResult(req);
-
-        if (!err.isEmpty()) {
+        if(!err.isEmpty()){
 
             if (req.file){
                 fs.unlink(req.file.path, (err) => {
@@ -48,9 +44,7 @@ export const addPet = async(req: Request,res: Response): Promise<Response> => {
             })
         }
 
-        const { namePet = "", agePet = "", sexPet = "", weightPet = "", idSpecies = "", idUser = "" } = req.body;
-
-        console.log(req.file);
+        const { nameProduct, descriptionProduct, stockProduct, priceProduct, idCategory } = req.body;
 
         if (!req.file){
             return res.status(400).json({
@@ -61,14 +55,14 @@ export const addPet = async(req: Request,res: Response): Promise<Response> => {
 
         const imagenSubida: UploadApiResponse = await subirImagen(req.file.path);
 
-        const addedPet: any = await pool.query(addPetQuery, [namePet, agePet, sexPet, weightPet, imagenSubida.secure_url, idSpecies, idUser])
+        const addedProduct: any = await pool.query(addProductQuery, [nameProduct, descriptionProduct, stockProduct, priceProduct, imagenSubida.secure_url, idCategory])
 
         return res.status(201).json({
             status: "OK",
-            msg: "La mascota se registró correctamente",
-            data: addedPet[0]
-        });
-        
+            msg: "El producto se registró correctamente",
+            data: addedProduct[0]
+        })
+
     } catch (error) {
         console.log(error);
         return res.status(500).json({
@@ -79,28 +73,28 @@ export const addPet = async(req: Request,res: Response): Promise<Response> => {
     }
 }
 
-export const updatePet = async (req: Request,res: Response): Promise<Response> => {
+export const updateProduct = async (req: Request,res: Response): Promise<Response> => {
     try {
-        
-        const err: Result = validationResult(req);
 
-        if (!err.isEmpty()) return res.status(400).json({
+        const err: Result = validationResult(req)
+
+        if(!err.isEmpty()) return res.status(400).json({
             status: "FAILED",
             msg: err.array()[0]?.msg,
             data: err.array()
         })
-        
-        const { idPet } = req.params;
-        const { namePet = "", agePet = "", sexPet = "", weightPet = "", idSpecies = "", idUser = "" } = req.body;
 
-        const updatedPet: any = await pool.query(updatePetQuery,[namePet, agePet, sexPet, weightPet, idSpecies, idUser, idPet])
+        const {idProduct} = req.params 
+        const { nameProduct, descriptionProduct, stockProduct, priceProduct, idCategory } = req.body;
+
+        const updatedProduct: any = await pool.query(updateProductQuery, [nameProduct, descriptionProduct, stockProduct, priceProduct, idCategory, idProduct])
 
         return res.status(201).json({
             status: "OK",
-            msg: "La mascota se actualizó correctamente",
-            data: updatedPet[0]
+            msg: "El producto se actualizó correctamente",
+            data: updatedProduct[0]
         })
-
+        
     } catch (error) {
         console.log(error);
         return res.status(500).json({

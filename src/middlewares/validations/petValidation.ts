@@ -3,11 +3,6 @@ import pool from "./../../database";
 import { body, param } from "express-validator";
 
 export const addPetValidation = [
-    param("idPet").notEmpty().withMessage("El id de la mascota no puede estar vacio").isInt().withMessage("El id de la mascota debe ser un entero").custom(async(value) => {
-        const res: any = await pool.query(verifyIdPet, [value])
-        if (res[0].length === 0) throw new Error("La mascota no existe")
-        return true;
-    }),
     body("namePet").notEmpty().withMessage("El nombre no puede estar vacio").isString().withMessage("El nombre debe ser un texto"),
     body("agePet").notEmpty().withMessage("La edad no puede estar vacio").isInt().withMessage("La edad debe ser un entero").custom((value) => {
         if (value < 0){
@@ -16,10 +11,10 @@ export const addPetValidation = [
         return true;
     }),
     body("sexPet").notEmpty().withMessage("El sexo no puede estar vacio").isString().withMessage("El sexo debe ser un texto").custom((value: string) => {
-        if (value.toLowerCase() === "masculino" || value.toLowerCase() === "femenino"){
+        if (value.toUpperCase() === "MACHO" || value.toUpperCase() === "HEMBRA"){
             return true;
         }
-        throw new Error("El sexo solo puede ser masculino y femenino")
+        throw new Error("El sexo solo puede ser macho o hembra")
     }),
     body("weightPet").notEmpty().withMessage("El peso no puede estar vacio").isNumeric().withMessage("El peso debe ser un número").custom((value) => {
         if (value < 0){
@@ -44,6 +39,11 @@ export const addPetValidation = [
 ] 
 
 export const updatePetValidation = [
+    param("idPet").notEmpty().withMessage("El id de la mascota no puede estar vacio").isInt().withMessage("El id de la mascota debe ser un entero").custom(async(value) => {
+        const res: any = await pool.query(verifyIdPet, [value])
+        if (res[0].length === 0) throw new Error("La mascota no existe")
+        return true;
+    }),
     body("namePet").notEmpty().withMessage("El nombre no puede estar vacio").isString().withMessage("El nombre debe ser un texto"),
     body("agePet").notEmpty().withMessage("La edad no puede estar vacio").isInt().withMessage("La edad debe ser un entero").custom((value) => {
         if (value < 0){
@@ -52,10 +52,10 @@ export const updatePetValidation = [
         return true;
     }),
     body("sexPet").notEmpty().withMessage("El sexo no puede estar vacio").isString().withMessage("El sexo debe ser un texto").custom((value: string) => {
-        if (value.toLowerCase() === "masculino" || value.toLowerCase() === "femenino"){
+        if (value.toUpperCase() === "MACHO" || value.toUpperCase() === "HEMBRA"){
             return true;
         }
-        throw new Error("El sexo solo puede ser masculino y femenino")
+        throw new Error("El sexo solo puede ser macho o hembra")
     }),
     body("weightPet").notEmpty().withMessage("El peso no puede estar vacio").isNumeric().withMessage("El peso debe ser un número").custom((value) => {
         if (value < 0){
