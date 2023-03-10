@@ -75,7 +75,7 @@ export const addVet = async(req: Request,res: Response): Promise<Response> => {
     }
 }
 
-export const updateVet = async (req: Request,res: Response) => {
+export const updateVet = async (req: Request,res: Response): Promise<Response> => {
     try {
 
         const err: Result = validationResult(req);
