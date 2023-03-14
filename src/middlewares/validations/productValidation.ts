@@ -1,4 +1,4 @@
-import { verifyIdCategory, verifyNameProduct, verifyIdProduct, verifyNameProductRepeat } from './../../libs/queriesValidation/productQueryValidation';
+import { verifyIdCategory, verifyNameProduct, verifyIdProduct, verifyNameProductRepeat, verifyIdBrand } from './../../libs/queriesValidation/productQueryValidation';
 import pool from "./../../database";
 import { body, param } from "express-validator";
 
@@ -20,6 +20,11 @@ export const addProductValidation = [
     body("idCategory").notEmpty().withMessage("La categoria no puede estar vacio").isInt().withMessage("El id de la categoria debe ser un entero").custom(async(value) => {
         const res: any = await pool.query(verifyIdCategory, [value])
         if (res[0].length === 0) throw new Error("La categoria no existe")
+        return true;
+    }),
+    body("idBrand").notEmpty().withMessage("La marca no puede estar vacio").isInt().withMessage("El id de la marca debe ser un entero").custom(async(value) => {
+        const res: any = await pool.query(verifyIdBrand, [value])
+        if (res[0].length === 0) throw new Error("La marca no existe")
         return true;
     })
 ]
@@ -47,6 +52,11 @@ export const updateProductValidation = [
     body("idCategory").notEmpty().withMessage("La categoria no puede estar vacio").isInt().withMessage("El id de la categoria debe ser un entero").custom(async(value) => {
         const res: any = await pool.query(verifyIdCategory, [value])
         if (res[0].length === 0) throw new Error("La categoria no existe")
+        return true;
+    }),
+    body("idBrand").notEmpty().withMessage("La marca no puede estar vacio").isInt().withMessage("El id de la marca debe ser un entero").custom(async(value) => {
+        const res: any = await pool.query(verifyIdBrand, [value])
+        if (res[0].length === 0) throw new Error("La marca no existe")
         return true;
     })
 ]

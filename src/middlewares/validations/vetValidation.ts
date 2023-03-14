@@ -1,4 +1,4 @@
-import { verifyDNIVet, verifyDNIVetRepeat, verifyEmailVet, verifyEmailVetRepeat, verifyIdSpecialty, verifyIdVet } from './../../libs/queriesValidation/vetQueryValidation';
+import { verifyDNIVet, verifyDNIVetRepeat, verifyEmailVet, verifyEmailVetRepeat, verifyIdSex, verifyIdSpecialty, verifyIdVet } from './../../libs/queriesValidation/vetQueryValidation';
 import pool from "./../../database";
 import { body, param } from "express-validator";
 
@@ -12,10 +12,6 @@ export const addVetValidation = [
     }),
     body("phoneVet").notEmpty().withMessage("El telefono no puede estar vacio").isInt().withMessage("El telefono debe ser número enteros"),
     body("addressVet").notEmpty().withMessage("La dirección no puede estar vacio").isString().withMessage("La dirección debe ser un texto").isLength({max: 250}).withMessage("La dirección debe tener menos de 250 caracteres"),
-    body("sexVet").notEmpty().withMessage("El sexo no puede estar vacio").isString().withMessage("El sexo debe ser un texto").custom((value: string) => {
-        if (value.toUpperCase() === "MASCULINO" || value.toUpperCase() === "FEMENINO") return true
-        throw new Error("El sexo debe ser masculino o femenino")
-    }),
     body("emailVet").notEmpty().withMessage("El email no puede estar vacio").isEmail().withMessage("El correo no tiene el formato indicado").custom(async(value) => {
         const res: any = await pool.query(verifyEmailVet, [value])
         if (res[0].length > 0) throw new Error("El email ya está en uso")
@@ -24,6 +20,11 @@ export const addVetValidation = [
     body("idSpecialty").notEmpty().withMessage("La especialidad no puede estar vacia").isInt().withMessage("El id de la especialidad debe ser un entero").custom(async(value) => {
         const res:any = await pool.query(verifyIdSpecialty, [value]);
         if (res[0].length === 0) throw new Error("La especialidad no existe")
+        return true;
+    }),
+    body("idSex").notEmpty().withMessage("El sexo no puede estar vacio").isInt().withMessage("El sexo debe ser un número entero").custom(async(value) => {
+        const res: any = await pool.query(verifyIdSex, [value])
+        if (res[0].length === 0) throw new Error("El sexo ingresado no existe")
         return true;
     })
 ]
@@ -43,10 +44,6 @@ export const updateVetValidation = [
     }),
     body("phoneVet").notEmpty().withMessage("El telefono no puede estar vacio").isInt().withMessage("El telefono debe ser número enteros"),
     body("addressVet").notEmpty().withMessage("La dirección no puede estar vacio").isString().withMessage("La dirección debe ser un texto").isLength({max: 250}).withMessage("La dirección debe tener menos de 250 caracteres"),
-    body("sexVet").notEmpty().withMessage("El sexo no puede estar vacio").isString().withMessage("El sexo debe ser un texto").custom((value: string) => {
-        if (value.toUpperCase() === "MASCULINO" || value.toUpperCase() === "FEMENINO") return true
-        throw new Error("El sexo debe ser masculino o femenino")
-    }),
     body("emailVet").notEmpty().withMessage("El email no puede estar vacio").isEmail().withMessage("El correo no tiene el formato indicado").custom(async(value, { req }) => {
         const res: any = await pool.query(verifyEmailVetRepeat, [ req.params?.idVet, value])
         if (res[0].length > 0) throw new Error("El email ya está en uso")
@@ -55,6 +52,11 @@ export const updateVetValidation = [
     body("idSpecialty").notEmpty().withMessage("La especialidad no puede estar vacia").isInt().withMessage("El id de la especialidad debe ser un entero").custom(async(value) => {
         const res:any = await pool.query(verifyIdSpecialty, [value]);
         if (res[0].length === 0) throw new Error("La especialidad no existe")
+        return true;
+    }),
+    body("idSex").notEmpty().withMessage("El sexo no puede estar vacio").isInt().withMessage("El sexo debe ser un número entero").custom(async(value) => {
+        const res: any = await pool.query(verifyIdSex, [value])
+        if (res[0].length === 0) throw new Error("El sexo ingresado no existe")
         return true;
     })
 ]

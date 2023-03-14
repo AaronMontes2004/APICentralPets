@@ -68,11 +68,11 @@ export const signupUser = async (req: Request,res: Response): Promise<Response> 
             data: err.array()
         })
 
-        const { nameUser, lastnameUser, userUser, emailUser, passwordUser, cellphoneUser, addressUser, sexUser, dniUser } = req.body;
+        const { nameUser, lastnameUser, userUser, emailUser, passwordUser, cellphoneUser, addressUser, dniUser, idSex } = req.body;
 
         const encryptedPassword: string = await encryptPassword(passwordUser);
 
-        const addedUser: any = await pool.query(signupUserQuery, [nameUser, lastnameUser, userUser, emailUser, encryptedPassword, cellphoneUser, addressUser, sexUser, dniUser]) 
+        const addedUser: any = await pool.query(signupUserQuery, [nameUser, lastnameUser, userUser, emailUser, encryptedPassword, cellphoneUser, addressUser, dniUser, idSex]) 
         console.log(addedUser);
 
         const token: string = jwt.sign({id: addedUser[0].insertId}, process.env.JWT_SECRET || "central_pets", {expiresIn: "7d"})

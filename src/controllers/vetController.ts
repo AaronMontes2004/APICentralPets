@@ -53,11 +53,11 @@ export const addVet = async(req: Request,res: Response): Promise<Response> => {
             })
         }
 
-        const { nameVet, lastnameVet, dniVet, phoneVet, addressVet, sexVet, emailVet, idSpecialty } = req.body;
+        const { nameVet, lastnameVet, dniVet, phoneVet, addressVet, emailVet, idSpecialty, idSex } = req.body;
 
         const imagenSubida: UploadApiResponse = await subirImagen(req.file.path);
 
-        const addedVet: any = await pool.query(addVetQuery, [nameVet, lastnameVet, dniVet, phoneVet, addressVet, sexVet, emailVet, imagenSubida.secure_url, idSpecialty])
+        const addedVet: any = await pool.query(addVetQuery, [nameVet, lastnameVet, dniVet, phoneVet, addressVet, emailVet, imagenSubida.secure_url, idSpecialty, idSex])
 
         return res.status(201).json({
             status: "OK",
@@ -87,9 +87,9 @@ export const updateVet = async (req: Request,res: Response): Promise<Response> =
         })
 
         const { idVet } = req.params
-        const { nameVet, lastnameVet, dniVet, phoneVet, addressVet, sexVet, emailVet, idSpecialty } = req.body;
+        const { nameVet, lastnameVet, dniVet, phoneVet, addressVet, emailVet, idSpecialty, idSex } = req.body;
 
-        const updatedVet: any = await pool.query(updateVetQuery, [nameVet, lastnameVet, dniVet, phoneVet, addressVet, sexVet, emailVet, idSpecialty, idVet])
+        const updatedVet: any = await pool.query(updateVetQuery, [nameVet, lastnameVet, dniVet, phoneVet, addressVet, emailVet, idSpecialty, idSex, idVet])
 
         return res.status(201).json({
             status: "OK",

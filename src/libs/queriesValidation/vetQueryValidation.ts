@@ -9,3 +9,5 @@ export const verifyIdVet: string = "SELECT * FROM veterinario WHERE idVeterinari
 export const verifyDNIVetRepeat: string = "SELECT * FROM veterinario WHERE idVeterinario != ? AND dniVeterinario = ? AND estadoVeterinario = 1"
 
 export const verifyEmailVetRepeat: string = "SELECT * FROM veterinario WHERE idVeterinario != ? AND correoVeterinario = ? AND estadoVeterinario = 1"
+
+export const verifyIdSex: string = "SELECT * FROM sexo WHERE idSexo = ?"

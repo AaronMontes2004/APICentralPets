@@ -1,4 +1,4 @@
-import { verifyCellPhoneUser, verifyDNIUser } from './../../libs/queriesValidation/userQueryValidation';
+import { verifyCellPhoneUser, verifyDNIUser, verifyIdSex } from './../../libs/queriesValidation/userQueryValidation';
 import { comparePassowrd } from './../../libs/functions';
 import pool from "../../database"
 import { body } from "express-validator"
@@ -42,23 +42,18 @@ export const signupUserValidation = [
     body("passwordUser").notEmpty().withMessage("La contraseña no puede estar vacio").isStrongPassword().withMessage("La contraseña debe tener minúsculas, mayúsculas, numeros y caracteres especiales"),
     body("cellphoneUser").notEmpty().withMessage("El celular no puede estar vacio").isInt().withMessage("El celular debe tener solo números").custom(async(value) => {
         const res: any = await pool.query(verifyCellPhoneUser, [value])
-        if (res[0].length > 0){
-            throw new Error("El número de celular ya está en uso")
-        }
+        if (res[0].length > 0) throw new Error("El número de celular ya está en uso")
         return true;
     }),
     body("addressUser").notEmpty().withMessage("La dirección no puede estar vacio").isString().withMessage("La dirección debe ser un texto"),
-    body("sexUser").notEmpty().withMessage("El sexo no puede estar vacio").isString().withMessage("El sexo debe ser un texto").custom((value) => {
-        if (value.toUpperCase() === "MASCULINO" || value.toUpperCase() === "FEMENINO"){
-            return true;
-        }
-        throw new Error("El sexo debe ser masculino o femenino")
-    }),
     body("dniUser").notEmpty().withMessage("El DNI no puede estar vacio").isInt().withMessage("El DNI debe tener solo números").custom(async(value) => {
         const res: any = await pool.query(verifyDNIUser, [value])
-        if (res[0].length > 0){
-            throw new Error("El dni ya está en uso")
-        }
+        if (res[0].length > 0) throw new Error("El dni ya está en uso")
+        return true;
+    }),
+    body("idSex").notEmpty().withMessage("El sexo no puede estar vacio").isInt().withMessage("El sexo debe ser un número entero").custom(async(value) => {
+        const res: any = await pool.query(verifyIdSex, [value])
+        if (res[0].length === 0) throw new Error("El sexo ingresado no existe")
         return true;
     })
 ]

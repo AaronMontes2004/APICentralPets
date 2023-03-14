@@ -44,7 +44,7 @@ export const addProduct = async(req: Request,res: Response): Promise<Response> =
             })
         }
 
-        const { nameProduct, descriptionProduct, stockProduct, priceProduct, idCategory } = req.body;
+        const { nameProduct, descriptionProduct, stockProduct, priceProduct, idCategory, idBrand } = req.body;
 
         if (!req.file){
             return res.status(400).json({
@@ -55,7 +55,7 @@ export const addProduct = async(req: Request,res: Response): Promise<Response> =
 
         const imagenSubida: UploadApiResponse = await subirImagen(req.file.path);
 
-        const addedProduct: any = await pool.query(addProductQuery, [nameProduct, descriptionProduct, stockProduct, priceProduct, imagenSubida.secure_url, idCategory])
+        const addedProduct: any = await pool.query(addProductQuery, [nameProduct, descriptionProduct, stockProduct, priceProduct, imagenSubida.secure_url, idCategory, idBrand])
 
         return res.status(201).json({
             status: "OK",
@@ -85,9 +85,9 @@ export const updateProduct = async (req: Request,res: Response): Promise<Respons
         })
 
         const {idProduct} = req.params 
-        const { nameProduct, descriptionProduct, stockProduct, priceProduct, idCategory } = req.body;
+        const { nameProduct, descriptionProduct, stockProduct, priceProduct, idCategory, idBrand } = req.body;
 
-        const updatedProduct: any = await pool.query(updateProductQuery, [nameProduct, descriptionProduct, stockProduct, priceProduct, idCategory, idProduct])
+        const updatedProduct: any = await pool.query(updateProductQuery, [nameProduct, descriptionProduct, stockProduct, priceProduct, idCategory, idBrand, idProduct])
 
         return res.status(201).json({
             status: "OK",
