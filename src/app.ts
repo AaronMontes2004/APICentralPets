@@ -12,6 +12,7 @@ import productRouter from "./routes/productRouter";
 import vetRouter from "./routes/VetRouter";
 import appointmentTypeRouter from "./routes/appointmentTypeRouter";
 import appointmentRouter from "./routes/appointmentRouter";
+import reservationRouter from "./routes/reservationRouter";
 
 const app: Application = express();
 
@@ -40,6 +41,7 @@ app.use("/api/product", productRouter)
 app.use("/api/vet", vetRouter)
 app.use("/api/appointmentType", appointmentTypeRouter)
 app.use("/api/appointment", appointmentRouter)
+app.use("/api/reservation", reservationRouter)
 
 app.use((req,res) => {
     res.status(404).json({

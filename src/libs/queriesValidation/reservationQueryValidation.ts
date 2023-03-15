@@ -1,0 +1,1 @@
+export const verifyIdReservation = "SELECT * FROM reservacion WHERE idReservacion = ?"
