@@ -13,6 +13,8 @@ import vetRouter from "./routes/VetRouter";
 import appointmentTypeRouter from "./routes/appointmentTypeRouter";
 import appointmentRouter from "./routes/appointmentRouter";
 import reservationRouter from "./routes/reservationRouter";
+import diagnosticRouter from "./routes/diagnosticRouter";
+import treatmentRouter from "./routes/treatmentRouter";
 
 const app: Application = express();
 
@@ -42,6 +44,8 @@ app.use("/api/vet", vetRouter)
 app.use("/api/appointmentType", appointmentTypeRouter)
 app.use("/api/appointment", appointmentRouter)
 app.use("/api/reservation", reservationRouter)
+app.use("/api/diagnostic", diagnosticRouter)
+app.use("/api/treatment", treatmentRouter)
 
 app.use((req,res) => {
     res.status(404).json({

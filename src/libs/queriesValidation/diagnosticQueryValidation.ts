@@ -1,0 +1,1 @@
+export const verifyIdDiagnostic: string = "SELECT * FROM diagnostico WHERE idDiagnostico = ?"

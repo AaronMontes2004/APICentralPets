@@ -1,19 +1,17 @@
-import { Result, validationResult } from 'express-validator';
-import { addAppointmentTypeQuery, getAppointmentTypesQuery, updateAppointmentTypeQuery } from './../libs/queries/appointmentTypeQuery';
+import { addDiagnosticQuery, getDiagnosticsQuery, updateDiagnosticQuery } from './../libs/queries/diagnosticQuery';
 import pool from "./../database";
 import { Request, Response } from "express";
+import { Result, validationResult } from 'express-validator';
 
-export const getAppointmentTypes = async (req: Request,res: Response): Promise<Response> => {
+export const getDiagnostics = async(req: Request,res: Response): Promise<Response> => {
     try {
-        
-        const appointmentTypeObtained: any = await pool.query(getAppointmentTypesQuery)
+        const diagnosticsObtained: any = await pool.query(getDiagnosticsQuery)
 
         return res.status(200).json({
             status: "OK",
-            msg: "Se obtuvieron los tipos de cita exitosamente",
-            data: appointmentTypeObtained[0]
+            msg: "Se obtuvieron los diagnosticos exitosamente",
+            data: diagnosticsObtained[0]
         })
-
     } catch (error) {
         console.log(error);
         return res.status(500).json({
@@ -24,7 +22,7 @@ export const getAppointmentTypes = async (req: Request,res: Response): Promise<R
     }
 }
 
-export const addAppointmentType = async(req: Request,res: Response) => {
+export const addDiagnostic = async(req: Request,res: Response): Promise<Response> => {
     try {
 
         const err: Result = validationResult(req);
@@ -35,14 +33,14 @@ export const addAppointmentType = async(req: Request,res: Response) => {
             data: err.array()
         })
 
-        const { nameAppointmentType, descriptionAppointmentType } = req.body;
-
-        const appointmentTypeAdded: any = await pool.query(addAppointmentTypeQuery, [nameAppointmentType, descriptionAppointmentType])
+        const { descriptionDiagnostic } = req.body
+ 
+        const addedDiagnostic: any = await pool.query(addDiagnosticQuery, [descriptionDiagnostic])
 
         return res.status(201).json({
             status: "OK",
-            msg: "Se registró el tipo de cita correctamente",
-            data: appointmentTypeAdded[0]
+            msg: "El diagnóstico se registró correctamente",
+            data: addedDiagnostic[0]
         })
         
     } catch (error) {
@@ -55,9 +53,8 @@ export const addAppointmentType = async(req: Request,res: Response) => {
     }
 }
 
-export const updateAppointmentType = async (req: Request,res: Response) => {
+export const updateDiagnostic = async(req: Request,res: Response) => {
     try {
-
         const err: Result = validationResult(req);
 
         if (!err.isEmpty()) return res.status(400).json({
@@ -66,17 +63,17 @@ export const updateAppointmentType = async (req: Request,res: Response) => {
             data: err.array()
         })
 
-        const { idAppointmentType } = req.params
-        const { nameAppointmentType, descriptionAppointmentType } = req.body;
+        const { idDiagnostic } = req.params
+        const { descriptionDiagnostic } = req.body
 
-        const appointmentTypeUpdated: any = await pool.query(updateAppointmentTypeQuery, [nameAppointmentType, descriptionAppointmentType, idAppointmentType])
+        const updatedDiagnostic: any = await pool.query(updateDiagnosticQuery, [descriptionDiagnostic, idDiagnostic])
 
         return res.status(201).json({
             status: "OK",
-            msg: "Se actualizó el tipo de cita correctamente",
-            data: appointmentTypeUpdated[0]
+            msg: "Se registró el diagnostico correctamente",
+            data: updatedDiagnostic[0]
         })
-        
+
     } catch (error) {
         console.log(error);
         return res.status(500).json({
