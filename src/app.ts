@@ -16,6 +16,7 @@ import reservationRouter from "./routes/reservationRouter";
 import diagnosticRouter from "./routes/diagnosticRouter";
 import treatmentRouter from "./routes/treatmentRouter";
 import medicalHistoryRouter from "./routes/medicalHistoryRouter";
+import saleRouter from "./routes/saleRouter";
 
 const app: Application = express();
 
@@ -48,6 +49,7 @@ app.use("/api/reservation", reservationRouter)
 app.use("/api/diagnostic", diagnosticRouter)
 app.use("/api/treatment", treatmentRouter)
 app.use("/api/medicalHistory", medicalHistoryRouter)
+app.use("/api/sale", saleRouter)
 
 app.use((req,res) => {
     res.status(404).json({
