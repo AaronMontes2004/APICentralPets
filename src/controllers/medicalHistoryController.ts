@@ -1,17 +1,17 @@
-import { addAppointmentQuery, getAppointmentsQuery, updateAppointmentQuery } from './../libs/queries/appointmentQuery';
+import { addMedicalHistoryQuery, getMedicalHistoryQuery, updateMedicalHistoryQuery } from './../libs/queries/medicalHistoryQuery';
 import pool from "./../database";
 import { Request, Response } from "express";
 import { Result, validationResult } from 'express-validator';
 
-export const getAppointments = async(req: Request,res: Response): Promise<Response> => {
+export const getMedicalHistory = async(req: Request,res: Response) => {
     try {
         
-        const appointmentsObtained: any = await pool.query(getAppointmentsQuery)
+        const medicalHistoryObtained: any = await pool.query(getMedicalHistoryQuery)
 
         return res.status(200).json({
             status: "OK",
-            msg: "Se obtuvieron las citas correctamente",
-            data: appointmentsObtained[0]
+            msg: "Se obtuvieron los historiales médicos exitosamente",
+            data: medicalHistoryObtained[0]
         })
 
     } catch (error) {
@@ -24,7 +24,7 @@ export const getAppointments = async(req: Request,res: Response): Promise<Respon
     }
 }
 
-export const addAppointment = async(req: Request,res: Response): Promise<Response> => {
+export const addMedicalHistory = async (req: Request,res: Response) => {
     try {
 
         const err: Result = validationResult(req);
@@ -35,14 +35,14 @@ export const addAppointment = async(req: Request,res: Response): Promise<Respons
             data: err.array()
         })
 
-        const { descriptionAppointment, idReservation, idClinic, idPet, idVet, idAppointmentType } = req.body;
+        const { reasonMedicalHistory, idDiagnostic, idTreatment, idUser, idPet } = req.body
 
-        const addedAppointment: any = await pool.query(addAppointmentQuery, [new Date(),descriptionAppointment, idReservation, idClinic, idPet, idVet, idAppointmentType])
+        const addedMedicalHistory: any = await pool.query(addMedicalHistoryQuery, [new Date(), reasonMedicalHistory, idDiagnostic, idTreatment, idUser, idPet])
 
         return res.status(201).json({
             status: "OK",
-            msg: "Se cita se registró correctamente",
-            data: addedAppointment[0]
+            msg: "El historial médico se registró correctamente",
+            data: addedMedicalHistory[0]
         })
         
     } catch (error) {
@@ -55,7 +55,7 @@ export const addAppointment = async(req: Request,res: Response): Promise<Respons
     }
 }
 
-export const updateAppointment = async(req: Request,res: Response): Promise<Response> => {
+export const updateMedicalHistory = async (req: Request,res: Response) => {
     try {
 
         const err: Result = validationResult(req);
@@ -66,15 +66,15 @@ export const updateAppointment = async(req: Request,res: Response): Promise<Resp
             data: err.array()
         })
 
-        const { idAppointment } = req.params;
-        const { descriptionAppointment, idReservation, idClinic, idPet, idVet, idAppointmentType } = req.body;
+        const { idMedicalHistory } = req.params
+        const { reasonMedicalHistory, idDiagnostic, idTreatment, idUser, idPet } = req.body
 
-        const updatedAppointment: any = await pool.query(updateAppointmentQuery, [descriptionAppointment, idReservation, idClinic, idPet, idVet, idAppointmentType, idAppointment])
+        const updatedMedicalHistory: any = await pool.query(updateMedicalHistoryQuery, [reasonMedicalHistory, idDiagnostic, idTreatment, idUser, idPet, idMedicalHistory])
 
         return res.status(201).json({
             status: "OK",
-            msg: "La cita se actualizó exitosamente",
-            data: updatedAppointment[0]
+            msg: "El historial médico se actualizó correctamente",
+            data: updatedMedicalHistory[0]
         })
         
     } catch (error) {
