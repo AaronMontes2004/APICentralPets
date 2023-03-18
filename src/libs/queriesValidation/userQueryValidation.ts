@@ -7,3 +7,5 @@ export const verifyDNIUser: string = "SELECT * FROM usuario WHERE dniUsuario = ?
 export const verifyCellPhoneUser: string = "SELECT * FROM usuario WHERE celularUsuario = ? AND estadoUsuario = 1"
 
 export const verifyIdSex: string = "SELECT * FROM sexo WHERE idSexo = ?"
+
+export const verifyIdUser: string = "SELECT * FROM usuario WHERE idUsuario = ? AND estadoUsuario = 1"

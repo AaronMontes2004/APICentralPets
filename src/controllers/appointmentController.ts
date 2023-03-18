@@ -1,4 +1,4 @@
-import { addAppointmentQuery, getAppointmentsQuery, updateAppointmentQuery } from './../libs/queries/appointmentQuery';
+import { addAppointmentQuery, findByIdAppointmentQuery, getAppointmentsQuery, updateAppointmentQuery } from './../libs/queries/appointmentQuery';
 import pool from "./../database";
 import { Request, Response } from "express";
 import { Result, validationResult } from 'express-validator';
@@ -75,6 +75,37 @@ export const updateAppointment = async(req: Request,res: Response): Promise<Resp
             status: "OK",
             msg: "La cita se actualizó exitosamente",
             data: updatedAppointment[0]
+        })
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: "FAILED",
+            msg: "Error interno del sistema",
+            data: error
+        })
+    }
+}
+
+export const findByIdAppointment = async(req: Request,res: Response) => {
+    try {
+
+        const err: Result = validationResult(req);
+
+        if (!err.isEmpty()) return res.status(400).json({
+            status: "FAILED",
+            msg: err.array()[0]?.msg,
+            data: err.array()
+        })
+
+        const { idAppointment } = req.params
+
+        const appointmentObtained: any = await pool.query(findByIdAppointmentQuery, [idAppointment])
+
+        return res.status(200).json({
+            status: "OK",
+            msg: "Se obtuvo la cita exitosamente",
+            data: appointmentObtained[0][0]
         })
         
     } catch (error) {

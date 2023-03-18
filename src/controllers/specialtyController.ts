@@ -1,6 +1,6 @@
 import pool from "../database";
 import { Request, Response } from "express";
-import { getSpecialtiesQuery, addSpecialtyQuery, updateSpecialtyQuery } from "../libs/queries/specialtyQuery";
+import { getSpecialtiesQuery, addSpecialtyQuery, updateSpecialtyQuery, findByIdSpecialtyQuery } from "../libs/queries/specialtyQuery";
 import { Result, validationResult } from "express-validator";
 
 export const getSpecialties = async (req: Request,res: Response): Promise<Response> => {
@@ -72,6 +72,37 @@ export const updateSpecialty = async (req: Request,res: Response): Promise<Respo
             status: "OK",
             msg: "La especialidad fue actualizada con éxito",
             data: updatedSpecialty[0]
+        })
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: "FAILED",
+            msg: "Error interno del sistema",
+            data: error
+        })
+    }
+}
+
+export const findByIdSpecialty = async (req: Request,res: Response): Promise<Response> => {
+    try {
+
+        const err: Result = validationResult(req);
+
+        if (!err.isEmpty()) return res.status(400).json({
+            status: "FAILED",
+            msg: err.array()[0]?.msg,
+            data: err.array()
+        })
+
+        const { idSpecialty } = req.params;
+
+        const specialtyObtained: any = await pool.query(findByIdSpecialtyQuery, [idSpecialty])
+
+        return res.status(200).json({
+            status: "OK",
+            msg: "Se obtuvo la especialidad exitosamente",
+            data: specialtyObtained[0][0]
         })
         
     } catch (error) {

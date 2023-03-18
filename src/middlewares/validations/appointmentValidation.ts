@@ -64,3 +64,11 @@ export const updateAppointmentValidation = [
         return true;
     })
 ]
+
+export const findByIdAppointmentValidation = [
+    param("idAppointment").notEmpty().withMessage("El id de la cita no puede estar vacio").isInt().withMessage("El id de la cita debe ser un número entero").custom(async(value) => {
+        const res: any = await pool.query(verifyIdAppointment, [value])
+        if (res[0].length === 0) throw new Error("La cita no existe")
+        return true;
+    })
+]

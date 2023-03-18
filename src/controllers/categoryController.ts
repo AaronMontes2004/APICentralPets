@@ -1,4 +1,4 @@
-import { getCategoriesQuery, addCategoryQuery, updateCategoryQuery } from './../libs/queries/categoryQuery';
+import { getCategoriesQuery, addCategoryQuery, updateCategoryQuery, findByIdCategoryQuery } from './../libs/queries/categoryQuery';
 import pool from "./../database";
 import { Request, Response } from "express";
 import { Result, validationResult } from 'express-validator';
@@ -75,6 +75,37 @@ export const updateCategory = async (req: Request,res: Response): Promise<Respon
             status: "OK",
             msg: "La categoria se actualizó exitosamente",
             data: updatedCategory[0]
+        })
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: "FAILED",
+            msg: "Error interno del sistema",
+            data: error
+        })
+    }
+}
+
+export const findByIdCategory = async (req: Request,res: Response) => {
+    try {
+
+        const err: Result = validationResult(req);
+
+        if (!err.isEmpty()) return res.status(400).json({
+            status: "FAILED",
+            msg: err.array()[0]?.msg,
+            data: err.array()
+        })
+       
+        const { idCategory } = req.params;
+
+        const categoryObtained: any = await pool.query(findByIdCategoryQuery, [idCategory])
+
+        return res.status(200).json({
+            status: "OK",
+            msg: "Se obtuvo la categoria exitosamente",
+            data: categoryObtained[0]
         })
         
     } catch (error) {

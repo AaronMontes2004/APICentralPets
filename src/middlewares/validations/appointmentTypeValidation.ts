@@ -24,3 +24,11 @@ export const updateAppointmentTypeValidation = [
     }),
     body("descriptionAppointmentType").notEmpty().withMessage("La descripción no puede estar vacia").isString().withMessage("La descripción debe ser un texto").isLength({max: 500}).withMessage("La descripción debe tener menos de 500 caracteres")
 ]
+
+export const findByIdAppointmentTypeValidation = [
+    param("idAppointmentType").notEmpty().withMessage("El id no puede estar vacio").isInt().withMessage("El id debe ser un número entero").custom(async(value) => {
+        const res: any = await pool.query(verifyIdAppointmentType, [value])
+        if (res[0].length === 0) throw new Error("El tipo de cita no existe")
+        return true;
+    })
+]

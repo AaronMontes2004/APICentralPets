@@ -1,5 +1,5 @@
-import { addProductValidation, updateProductValidation } from './../middlewares/validations/productValidation';
-import { getProducts, addProduct, updateProduct } from './../controllers/productController';
+import { addProductValidation, findByIdProductValidation, updateProductValidation } from './../middlewares/validations/productValidation';
+import { getProducts, addProduct, updateProduct, findByIdProduct } from './../controllers/productController';
 import { Router } from 'express';
 import upload from './../libs/configMulter';
 
@@ -10,5 +10,7 @@ productRouter.get("/", getProducts)
 productRouter.post("/addProduct", upload.single("imageProduct"), addProductValidation, addProduct)
 
 productRouter.put("/updateProduct/:idProduct", updateProductValidation, updateProduct)
+
+productRouter.get("/findById/:idProduct", findByIdProductValidation, findByIdProduct)
 
 export default productRouter;

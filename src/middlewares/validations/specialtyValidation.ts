@@ -14,10 +14,10 @@ export const addSpecialtyValidation = [
 ];
 
 export const updateSpecialtyValidation = [
-    param("idSpecialty").notEmpty().withMessage("El id no puede estar vacio").isInt().withMessage("El id debe ser un entero").custom(async(value) => {
+    param("idSpecialty").notEmpty().withMessage("El id de la especialidad no puede estar vacio").isInt().withMessage("El id de la especialidad debe ser un número entero").custom(async(value) => {
         const res: any = await pool.query(verifyIdSpecialty, [value]);
         if (res[0].length === 0){
-            throw new Error("El id de la especialidad no existe")
+            throw new Error("La especialidad no existe")
         }
         return true;
     }),
@@ -29,4 +29,14 @@ export const updateSpecialtyValidation = [
         return true;
     }),
     body("descriptionSpecialty").notEmpty().withMessage("La descripción no puede estar vacio").isString().withMessage("La descripción debe ser un texto")
+]
+
+export const findByIdSpecialtyValidation = [
+    param("idSpecialty").notEmpty().withMessage("El id de la especialidad no puede estar vacio").isInt().withMessage("El id de la especialidad debe ser un número entero").custom(async(value) => {
+        const res: any = await pool.query(verifyIdSpecialty, [value]);
+        if (res[0].length === 0){
+            throw new Error("La especialidad no existe")
+        }
+        return true;
+    })
 ]

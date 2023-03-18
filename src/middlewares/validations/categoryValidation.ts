@@ -13,7 +13,7 @@ export const addCategoryValidation = [
 ]
 
 export const updateCategoryValidation = [
-    param("idCategory").notEmpty().withMessage("El id no puede estar vacio").isInt().withMessage("El id debe ser un número entero").custom(async(value) => {
+    param("idCategory").notEmpty().withMessage("El id de la categoria no puede estar vacio").isInt().withMessage("El id debe ser un número entero").custom(async(value) => {
         const res: any = await pool.query(verifyIdCategory, [value])
         if (res[0].length === 0){
             throw new Error("El id de la categoria no existe")
@@ -24,6 +24,16 @@ export const updateCategoryValidation = [
         const res: any = await pool.query(verifyNameCategoryRepeated, [req.params?.idCategory, value])
         if (res[0].length > 0){
             throw new Error("El nombre ya existe")
+        }
+        return true;
+    })
+]
+
+export const findByIdCategoryValidation = [
+    param("idCategory").notEmpty().withMessage("El id de la categoria no puede estar vacio").isInt().withMessage("El id de la categoria debe ser un número entero").custom(async(value) => {
+        const res: any = await pool.query(verifyIdCategory, [value])
+        if (res[0].length === 0){
+            throw new Error("La categoria no existe")
         }
         return true;
     })

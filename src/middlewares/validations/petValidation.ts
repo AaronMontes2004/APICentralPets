@@ -78,3 +78,11 @@ export const updatePetValidation = [
         throw new Error("El usuario no existe")
     })
 ]
+
+export const findByIdPetValidation = [
+    param("idPet").notEmpty().withMessage("El id de la mascota no puede estar vacio").isInt().withMessage("El id de la mascota debe ser un entero").custom(async(value) => {
+        const res: any = await pool.query(verifyIdPet, [value])
+        if (res[0].length === 0) throw new Error("La mascota no existe")
+        return true;
+    })
+]

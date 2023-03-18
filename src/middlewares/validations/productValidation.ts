@@ -30,7 +30,7 @@ export const addProductValidation = [
 ]
 
 export const updateProductValidation = [
-    param("idProduct").notEmpty().withMessage("El id del producto no puede estar vacio").isInt().withMessage("El id debe ser un entero").custom(async(value) => {
+    param("idProduct").notEmpty().withMessage("El id del producto no puede estar vacio").isInt().withMessage("El id del producto debe ser un entero").custom(async(value) => {
         const res: any = await pool.query(verifyIdProduct, [value])
         if (res[0].length === 0) throw new Error("El producto no existe")
         return true;
@@ -57,6 +57,14 @@ export const updateProductValidation = [
     body("idBrand").notEmpty().withMessage("La marca no puede estar vacio").isInt().withMessage("El id de la marca debe ser un entero").custom(async(value) => {
         const res: any = await pool.query(verifyIdBrand, [value])
         if (res[0].length === 0) throw new Error("La marca no existe")
+        return true;
+    })
+]
+
+export const findByIdProductValidation = [
+    param("idProduct").notEmpty().withMessage("El id del producto no puede estar vacio").isInt().withMessage("El id del producto debe ser un entero").custom(async(value) => {   
+        const res: any = await pool.query(verifyIdProduct, [value])
+        if (res[0].length === 0) throw new Error("El producto no existe")
         return true;
     })
 ]

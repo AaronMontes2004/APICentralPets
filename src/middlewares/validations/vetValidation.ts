@@ -30,7 +30,7 @@ export const addVetValidation = [
 ]
 
 export const updateVetValidation = [
-    param("idVet").notEmpty().withMessage("El id del veterinario no puede estar vacio").isInt().withMessage("El id del veterinario debe ser un entero").custom(async(value) => {
+    param("idVet").notEmpty().withMessage("El id del veterinario no puede estar vacio").isInt().withMessage("El id del veterinario debe ser un número entero").custom(async(value) => {
         const res: any = await pool.query(verifyIdVet, [value])
         if (res[0].length === 0) throw new Error("El veterinario no existe")
         return true
@@ -58,5 +58,13 @@ export const updateVetValidation = [
         const res: any = await pool.query(verifyIdSex, [value])
         if (res[0].length === 0) throw new Error("El sexo ingresado no existe")
         return true;
+    })
+]
+
+export const findByIdVetValidation = [
+    param("idVet").notEmpty().withMessage("El id del veterinario no puede estar vacio").isInt().withMessage("El id del veterinario debe ser un número entero").custom(async(value) => {
+        const res: any = await pool.query(verifyIdVet, [value])
+        if (res[0].length === 0) throw new Error("El veterinario no existe")
+        return true
     })
 ]

@@ -1,5 +1,5 @@
 import { Result, validationResult } from 'express-validator';
-import { getSpeciesQuery, addSpeciesQuery, updateSpeciesQuery } from './../libs/queries/speciesQuery';
+import { getSpeciesQuery, addSpeciesQuery, updateSpeciesQuery, findByIdSpeciesQuery } from './../libs/queries/speciesQuery';
 import pool from "../database";
 import { Request, Response } from "express";
 
@@ -74,6 +74,37 @@ export const updateSpecies = async (req: Request,res: Response): Promise<Respons
             data: updatedSpecies[0]
         });
 
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: "FAILED",
+            msg: "Error interno del sistema",
+            data: error
+        })
+    }
+}
+
+export const findByIdSpecies = async(req: Request,res: Response): Promise<Response> => {
+    try {
+
+        const err: Result = validationResult(req);
+
+        if (!err.isEmpty()) return res.status(400).json({
+            status: "FAILED",
+            msg: err.array()[0]?.msg,
+            data: err.array()
+        })
+
+        const { idSpecies } = req.params;
+
+        const speciesObtained: any = await pool.query(findByIdSpeciesQuery, [idSpecies])
+
+        return res.status(201).json({
+            status: "OK",
+            msg: "Se obtuvo la especie exitosamente",
+            data: speciesObtained[0][0]
+        })
+        
     } catch (error) {
         console.log(error);
         return res.status(500).json({

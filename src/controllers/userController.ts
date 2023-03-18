@@ -4,7 +4,7 @@ import pool from "../database";
 import { Request, Response } from "express";
 import { encryptPassword } from "../libs/functions";
 import { validationResult } from "express-validator/src/validation-result";
-import { getUsersQuery, signupUserQuery } from '../libs/queries/userQuery';
+import { findByIdUserQuery, getUsersQuery, signupUserQuery } from '../libs/queries/userQuery';
 import jwt from "jsonwebtoken";
 
 export const getUsers = async (req: Request,res: Response) => {
@@ -84,6 +84,37 @@ export const signupUser = async (req: Request,res: Response): Promise<Response> 
             token
         })
 
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: "FAILED",
+            msg: "Error interno del sistema",
+            data: error
+        })
+    }
+}
+
+export const findByIdUser = async(req: Request, res: Response): Promise<Response> => {
+    try {
+
+        const err: Result = validationResult(req);
+
+        if (!err.isEmpty()) return res.status(400).json({
+            status: "FAILED",
+            msg: err.array()[0]?.msg,
+            data: err.array()
+        })
+
+        const { idUser } = req.params;
+
+        const userObtained: any = await pool.query(findByIdUserQuery, [idUser])
+
+        return res.status(200).json({
+            status: "OK",
+            msg: "Se obtuvo el usuario exitosamente",
+            data: userObtained[0][0]
+        })
+        
     } catch (error) {
         console.log(error);
         return res.status(500).json({
