@@ -54,3 +54,11 @@ export const updateMedicalHistoryValidation = [
         return true;
     })
 ]
+
+export const findByIdMedicalHistoryValidation = [
+    param("idMedicalHistory").notEmpty().withMessage("El id del historial médico no puede estar vacio").isInt().withMessage("El id del historial médico debe ser un número entero").custom(async(value) => {
+        const res: any = await pool.query(verifyIdHistorial, [value])
+        if (res[0].length === 0) throw new Error("El historial médico no existe")
+        return true;
+    })
+]

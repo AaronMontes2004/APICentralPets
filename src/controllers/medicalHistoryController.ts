@@ -1,4 +1,4 @@
-import { addMedicalHistoryQuery, getMedicalHistoryQuery, updateMedicalHistoryQuery } from './../libs/queries/medicalHistoryQuery';
+import { addMedicalHistoryQuery, findByIdMedicalHistoryQuery, getMedicalHistoryQuery, updateMedicalHistoryQuery } from './../libs/queries/medicalHistoryQuery';
 import pool from "./../database";
 import { Request, Response } from "express";
 import { Result, validationResult } from 'express-validator';
@@ -75,6 +75,37 @@ export const updateMedicalHistory = async (req: Request,res: Response) => {
             status: "OK",
             msg: "El historial médico se actualizó correctamente",
             data: updatedMedicalHistory[0]
+        })
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: "FAILED",
+            msg: "Error interno del sistema",
+            data: error
+        })
+    }
+}
+
+export const findByIdMedicalHistory = async (req: Request,res: Response): Promise<Response> => {
+    try {
+
+        const err: Result = validationResult(req);
+
+        if (!err.isEmpty()) return res.status(400).json({
+            status: "FAILED",
+            msg: err.array()[0]?.msg,
+            data: err.array()
+        })
+
+        const { idMedicalHistory } = req.params
+
+        const medicalHistoryObtained: any = await pool.query(findByIdMedicalHistoryQuery, [idMedicalHistory])
+
+        return res.status(200).json({
+            status: "OK",
+            msg: "Se obtuvo el historial médico exitosamente",
+            data: medicalHistoryObtained[0][0]
         })
         
     } catch (error) {

@@ -50,3 +50,11 @@ export const updateSaleDetailValidation = [
         return true;
     })
 ]
+
+export const findByIdSaleDetailValidation = [
+    param("numSale").notEmpty().withMessage("El número de venta no puede estar vacio").isInt().withMessage("El número de venta debe ser un número entero").custom(async(value) => {
+        const res: any = await pool.query(verifyNumSale, [value])
+        if (res[0].length === 0) throw new Error("El detalle de la venta no existe")
+        return true;
+    })
+]

@@ -14,3 +14,11 @@ export const updateDiagnosticValidation = [
     }),
     body("descriptionDiagnostic").notEmpty().withMessage("La descripción no puede estar vacio").isString().withMessage("La descripción debe ser un texto")
 ]
+
+export const findByIdDiagnosticValidation = [
+    param("idDiagnostic").notEmpty().withMessage("El id del diagnostico no puede estar vacio").isString().withMessage("El diagnostico debe ser un texto").custom(async(value) => {
+        const res:any = await pool.query(verifyIdDiagnostic, [value])
+        if (res[0].length === 0) throw new Error("El diagnostico no existe")
+        return true;
+    })
+]

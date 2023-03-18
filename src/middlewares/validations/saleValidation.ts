@@ -22,3 +22,11 @@ export const updateSaleValidation = [
         return true;
     })
 ]
+
+export const findByIdSaleValidation = [
+    param("idSale").notEmpty().withMessage("El id de la venta no puede estar vacio").isInt().withMessage("El id de la venta debe ser un número entero").custom(async(value) => {
+        const res: any = await pool.query(verifyIdSale, [value])
+        if (res[0].length === 0) throw new Error("La venta no existe")
+        return true;
+    })
+]

@@ -28,3 +28,11 @@ export const updateReservationValidation = [
     body("timeReservation").notEmpty().withMessage("La hora de reserva no puede estar vacio").isString().withMessage("La hora de reserva debe ser un texto"),
     body("maximumTimeReservation").notEmpty().withMessage("La hora máxima no puede estar vacio").isString().withMessage("La hora máxima debe ser un texto")
 ]
+
+export const findByIdReservationValidation = [
+    param("idReservation").notEmpty().withMessage("El id de la reservación no puede estar vacio").isInt().withMessage("El id de la reservación debe ser un número entero").custom(async(value) => {
+        const res :any = await pool.query(verifyIdReservation, [value]);
+        if (res[0].length === 0) throw new Error("La reservación no existe")
+        return true;
+    })
+]
