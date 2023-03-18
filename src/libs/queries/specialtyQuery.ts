@@ -5,3 +5,7 @@ export const addSpecialtyQuery: string = "INSERT INTO especialidad(nombreEspecia
 export const updateSpecialtyQuery: string = "UPDATE especialidad SET nombreEspecialidad = ?, descripcionEspecialidad = ? WHERE idEspecialidad = ?"
 
 export const findByIdSpecialtyQuery: string = "SELECT * FROM especialidad WHERE idEspecialidad = ? AND estadoEspecialidad = 1"
+
+export const findAllByIdSpecialtyQuery: string = "SELECT * FROM especialidad WHERE idEspecialidad = ?"
+
+export const changeStatusSpecialtyQuery: string = "UPDATE especialidad SET estadoEspecialidad = ? WHERE idEspecialidad = ?"

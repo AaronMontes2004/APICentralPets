@@ -4,3 +4,7 @@ export const loginUserQuery: string = "SELECT * FROM usuario WHERE correoUsuario
 export const signupUserQuery: string = "INSERT INTO usuario(nombreUsuario, apellidoUsuario, usuarioUsuario, correoUsuario, contrasenaUsuario, celularUsuario, direccionUsuario, dniUsuario, idSexo) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
 export const findByIdUserQuery: string = "SELECT * FROM usuario WHERE idUsuario = ? AND estadoUsuario = 1"
+
+export const findAllByIdUserQuery: string = "SELECT * FROM usuario WHERE idUsuario = ?"
+
+export const changeStatusUserQuery: string = "UPDATE usuario SET estadoUsuario = ? WHERE idUsuario = ?"

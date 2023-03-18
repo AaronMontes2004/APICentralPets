@@ -6,6 +6,8 @@ export const verifyIdSpecialty: string = "SELECT * FROM  especialidad WHERE idEs
 
 export const verifyIdVet: string = "SELECT * FROM veterinario WHERE idVeterinario = ? AND estadoVeterinario = 1"
 
+export const verifyAllIdVet: string = "SELECT * FROM veterinario WHERE idVeterinario = ?"
+
 export const verifyDNIVetRepeat: string = "SELECT * FROM veterinario WHERE idVeterinario != ? AND dniVeterinario = ? AND estadoVeterinario = 1"
 
 export const verifyEmailVetRepeat: string = "SELECT * FROM veterinario WHERE idVeterinario != ? AND correoVeterinario = ? AND estadoVeterinario = 1"

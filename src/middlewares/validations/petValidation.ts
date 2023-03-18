@@ -1,4 +1,4 @@
-import { verifyIdUser, verifyIdSpecies, verifyIdPet } from './../../libs/queriesValidation/petQueryValidation';
+import { verifyIdUser, verifyIdSpecies, verifyIdPet, verifyAllIdPet } from './../../libs/queriesValidation/petQueryValidation';
 import pool from "./../../database";
 import { body, param } from "express-validator";
 
@@ -82,6 +82,14 @@ export const updatePetValidation = [
 export const findByIdPetValidation = [
     param("idPet").notEmpty().withMessage("El id de la mascota no puede estar vacio").isInt().withMessage("El id de la mascota debe ser un entero").custom(async(value) => {
         const res: any = await pool.query(verifyIdPet, [value])
+        if (res[0].length === 0) throw new Error("La mascota no existe")
+        return true;
+    })
+]
+
+export const changeStatusPetValidation = [
+    param("idPet").notEmpty().withMessage("El id de la mascota no puede estar vacio").isInt().withMessage("El id de la mascota debe ser un entero").custom(async(value) => {
+        const res: any = await pool.query(verifyAllIdPet, [value])
         if (res[0].length === 0) throw new Error("La mascota no existe")
         return true;
     })

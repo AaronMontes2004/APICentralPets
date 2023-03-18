@@ -2,4 +2,6 @@ export const verifyNameSpecies = "SELECT * FROM especie WHERE nombreEspecie = ? 
 
 export const verifyIdSpecies = "SELECT * FROM especie WHERE idEspecie = ? AND estadoEspecie = 1";
 
+export const verifyAllIdSpecies = "SELECT * FROM especie WHERE idEspecie = ?";
+
 export const verifyNameSpeciesRepeated = "SELECT * FROM especie WHERE idEspecie != ? AND nombreEspecie = ? AND estadoEspecie = 1";

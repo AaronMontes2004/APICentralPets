@@ -1,4 +1,4 @@
-import { addBrandQuery, findByIdBrandQuery, getBrandsQuery, updateBrandQuery } from './../libs/queries/brandQuery';
+import { addBrandQuery, changeStatusBrandQuery, findAllByIdBrandQuery, findByIdBrandQuery, getBrandsQuery, updateBrandQuery } from './../libs/queries/brandQuery';
 import pool from "./../database";
 import { Request, Response } from "express";
 import { Result, validationResult } from 'express-validator';
@@ -106,6 +106,39 @@ export const findByIdBrand = async (req: Request,res: Response): Promise<Respons
             status: "OK",
             msg: "Se obtuvo la marca exitosamente",
             data: brandObtained[0][0]
+        })
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: "FAILED",
+            msg: "Error interno del sistema",
+            data: error
+        })
+    }
+}
+
+export const changeStatusBrand = async(req: Request,res: Response): Promise<Response> => {
+    try {
+
+        const err: Result = validationResult(req);
+        
+        if (!err.isEmpty()) return res.status(400).json({
+            status: "FAILED",
+            msg: err.array()[0]?.msg,
+            data: err.array()
+        })
+
+        const { idBrand } = req.params
+
+        const brandObtained: any = await pool.query(findAllByIdBrandQuery, [idBrand])
+
+        const changedStatus: any = await pool.query(changeStatusBrandQuery, [!brandObtained[0][0].estadoMarca, idBrand])
+
+        return res.status(201).json({
+            status: "OK",
+            msg: "El estado de la marca de cambió exitosamente",
+            data: changedStatus[0]
         })
         
     } catch (error) {

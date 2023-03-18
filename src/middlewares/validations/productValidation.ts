@@ -1,4 +1,4 @@
-import { verifyIdCategory, verifyNameProduct, verifyIdProduct, verifyNameProductRepeat, verifyIdBrand } from './../../libs/queriesValidation/productQueryValidation';
+import { verifyIdCategory, verifyNameProduct, verifyIdProduct, verifyNameProductRepeat, verifyIdBrand, verifyAllIdProduct } from './../../libs/queriesValidation/productQueryValidation';
 import pool from "./../../database";
 import { body, param } from "express-validator";
 
@@ -64,6 +64,14 @@ export const updateProductValidation = [
 export const findByIdProductValidation = [
     param("idProduct").notEmpty().withMessage("El id del producto no puede estar vacio").isInt().withMessage("El id del producto debe ser un entero").custom(async(value) => {   
         const res: any = await pool.query(verifyIdProduct, [value])
+        if (res[0].length === 0) throw new Error("El producto no existe")
+        return true;
+    })
+]
+
+export const changeStatusProductValidation = [
+    param("idProduct").notEmpty().withMessage("El id del producto no puede estar vacio").isInt().withMessage("El id del producto debe ser un entero").custom(async(value) => {   
+        const res: any = await pool.query(verifyAllIdProduct, [value])
         if (res[0].length === 0) throw new Error("El producto no existe")
         return true;
     })

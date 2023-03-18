@@ -1,4 +1,4 @@
-import { verifyIdBrand, verifyNameBrand } from './../../libs/queriesValidation/brandQueryValidation';
+import { verifyAllIdBrand, verifyIdBrand, verifyNameBrand } from './../../libs/queriesValidation/brandQueryValidation';
 import pool from "./../../database";
 import { body, param } from "express-validator";
 
@@ -26,6 +26,14 @@ export const updateBrandValidation = [
 export const findByIdBrandValidation = [
     param("idBrand").notEmpty().withMessage("El id de la marca no puede estar vacio").isInt().withMessage("El id de la marca debe ser un número entero").custom(async(value) => {
         const res:any = await pool.query(verifyIdBrand, [value])
+        if (res[0].length === 0) throw new Error("La marca no existe")
+        return true;
+    })
+]
+
+export const changeStatusBrandValidation = [
+    param("idBrand").notEmpty().withMessage("El id de la marca no puede estar vacio").isInt().withMessage("El id de la marca debe ser un número entero").custom(async(value) => {
+        const res:any = await pool.query(verifyAllIdBrand, [value])
         if (res[0].length === 0) throw new Error("La marca no existe")
         return true;
     })

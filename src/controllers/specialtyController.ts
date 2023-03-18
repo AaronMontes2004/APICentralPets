@@ -1,3 +1,4 @@
+import { changeStatusSpecialtyQuery, findAllByIdSpecialtyQuery } from './../libs/queries/specialtyQuery';
 import pool from "../database";
 import { Request, Response } from "express";
 import { getSpecialtiesQuery, addSpecialtyQuery, updateSpecialtyQuery, findByIdSpecialtyQuery } from "../libs/queries/specialtyQuery";
@@ -103,6 +104,39 @@ export const findByIdSpecialty = async (req: Request,res: Response): Promise<Res
             status: "OK",
             msg: "Se obtuvo la especialidad exitosamente",
             data: specialtyObtained[0][0]
+        })
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: "FAILED",
+            msg: "Error interno del sistema",
+            data: error
+        })
+    }
+}
+
+export const changeStatusSpecialty = async(req:Request, res:Response): Promise<Response> => {
+    try {
+
+        const err: Result = validationResult(req);
+
+        if (!err.isEmpty()) return res.status(400).json({
+            status: "FAILED",
+            msg: err.array()[0]?.msg,
+            data: err.array()
+        })
+
+        const { idSpecialty } = req.params;
+
+        const specialtyObtained: any = await pool.query(findAllByIdSpecialtyQuery, [idSpecialty])
+
+        const changedStatus: any = await pool.query(changeStatusSpecialtyQuery, [!specialtyObtained[0][0].estadoEspecialidad, idSpecialty])
+
+        return res.status(201).json({
+            status: "OK",
+            msg: "El estado de la especialidad se cambió exitosamente",
+            data: changedStatus[0]
         })
         
     } catch (error) {

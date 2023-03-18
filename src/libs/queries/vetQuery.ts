@@ -5,3 +5,7 @@ export const addVetQuery: string = "INSERT INTO veterinario(nombreVeterinario, a
 export const updateVetQuery: string = "UPDATE veterinario SET nombreVeterinario = ?, apellidoVeterinario = ?, dniVeterinario = ?, telefonoVeterinario = ?, direccionVeterinario = ?, correoVeterinario = ?, idEspecialidad = ?, idSexo = ? WHERE idVeterinario = ?"
 
 export const findByIdVetQuery: string = "SELECT * FROM veterinario WHERE idVeterinario = ? AND estadoVeterinario = 1"
+
+export const findAllByIdVetQuery: string = "SELECT * FROM veterinario WHERE idVeterinario = ?"
+
+export const changeStatusVetQuery: string = "UPDATE veterinario SET estadoVeterinario = ? WHERE idVeterinario = ?"

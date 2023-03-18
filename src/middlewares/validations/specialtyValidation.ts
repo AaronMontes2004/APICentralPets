@@ -1,4 +1,4 @@
-import { verifyNameSpecialty, verifyNameSpecialtyRepeated, verifyIdSpecialty } from './../../libs/queriesValidation/specialtyQueryValidation';
+import { verifyNameSpecialty, verifyNameSpecialtyRepeated, verifyIdSpecialty, verifyAllIdSpecialty } from './../../libs/queriesValidation/specialtyQueryValidation';
 import pool from "../../database";
 import { body, param } from "express-validator";
 
@@ -34,6 +34,16 @@ export const updateSpecialtyValidation = [
 export const findByIdSpecialtyValidation = [
     param("idSpecialty").notEmpty().withMessage("El id de la especialidad no puede estar vacio").isInt().withMessage("El id de la especialidad debe ser un número entero").custom(async(value) => {
         const res: any = await pool.query(verifyIdSpecialty, [value]);
+        if (res[0].length === 0){
+            throw new Error("La especialidad no existe")
+        }
+        return true;
+    })
+]
+
+export const changeStatusSpecialtyValidation = [
+    param("idSpecialty").notEmpty().withMessage("El id de la especialidad no puede estar vacio").isInt().withMessage("El id de la especialidad debe ser un número entero").custom(async(value) => {
+        const res: any = await pool.query(verifyAllIdSpecialty, [value]);
         if (res[0].length === 0){
             throw new Error("La especialidad no existe")
         }

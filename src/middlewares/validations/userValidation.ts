@@ -1,4 +1,4 @@
-import { verifyCellPhoneUser, verifyDNIUser, verifyIdSex, verifyIdUser } from './../../libs/queriesValidation/userQueryValidation';
+import { verifyAllIdUser, verifyCellPhoneUser, verifyDNIUser, verifyIdSex, verifyIdUser } from './../../libs/queriesValidation/userQueryValidation';
 import { comparePassowrd } from './../../libs/functions';
 import pool from "../../database"
 import { body, param } from "express-validator"
@@ -61,6 +61,14 @@ export const signupUserValidation = [
 export const findByIdUserValidation = [
     param("idUser").notEmpty().withMessage("El id del usuario no puede estar vacio").isInt().withMessage("El id del usuario debe ser un número entero").custom(async(value) => {
         const res: any = await pool.query(verifyIdUser, [value])
+        if (res[0].length === 0) throw new Error("El usuario no existe")
+        return true;
+    })
+]
+
+export const changeStatusUserValidation = [
+    param("idUser").notEmpty().withMessage("El id del usuario no puede estar vacio").isInt().withMessage("El id del usuario debe ser un número entero").custom(async(value) => {
+        const res: any = await pool.query(verifyAllIdUser, [value])
         if (res[0].length === 0) throw new Error("El usuario no existe")
         return true;
     })

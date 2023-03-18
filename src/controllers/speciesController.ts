@@ -1,5 +1,5 @@
 import { Result, validationResult } from 'express-validator';
-import { getSpeciesQuery, addSpeciesQuery, updateSpeciesQuery, findByIdSpeciesQuery } from './../libs/queries/speciesQuery';
+import { getSpeciesQuery, addSpeciesQuery, updateSpeciesQuery, findByIdSpeciesQuery, findAllByIdSpeciesQuery, changeStatusSpeciesQuery } from './../libs/queries/speciesQuery';
 import pool from "../database";
 import { Request, Response } from "express";
 
@@ -105,6 +105,38 @@ export const findByIdSpecies = async(req: Request,res: Response): Promise<Respon
             data: speciesObtained[0][0]
         })
         
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: "FAILED",
+            msg: "Error interno del sistema",
+            data: error
+        })
+    }
+}
+
+export const changeStatusSpecies = async (req:Request, res:Response): Promise<Response> => {
+    try {
+
+        const err: Result = validationResult(req);
+
+        if (!err.isEmpty()) return res.status(400).json({
+            status: "FAILED",
+            msg: err.array()[0]?.msg,
+            data: err.array()
+        })
+
+        const { idSpecies } = req.params;
+
+        const speciesObtained: any = await pool.query(findAllByIdSpeciesQuery, [idSpecies])
+
+        const changedStatus: any = await pool.query(changeStatusSpeciesQuery, [!speciesObtained[0][0].estadoEspecie, idSpecies])
+
+        return res.status(201).json({
+            status: "OK",
+            msg: "El estado de la especie se cambió exitosamente",
+            data: changedStatus
+        })        
     } catch (error) {
         console.log(error);
         return res.status(500).json({

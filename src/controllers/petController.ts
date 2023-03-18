@@ -3,7 +3,7 @@ import { UploadApiResponse } from 'cloudinary';
 import { subirImagen } from './../libs/configCloudinary';
 import { Result } from 'express-validator';
 import { validationResult } from 'express-validator';
-import { getPetsQuery, addPetQuery, updatePetQuery, findByIdPetQuery } from './../libs/queries/petQuery';
+import { getPetsQuery, addPetQuery, updatePetQuery, findByIdPetQuery, findAllByIdPetQuery, changeStatusPetQuery } from './../libs/queries/petQuery';
 import pool from "./../database";
 import { Request, Response } from "express";
 
@@ -130,6 +130,39 @@ export const findByIdPet = async (req: Request,res: Response) => {
             status: "OK",
             msg: "Se obtuvo la mascota exitosamente",
             data: petObtained[0][0]
+        })
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: "FAILED",
+            msg: "Error interno del sistema",
+            data: error
+        })
+    }
+}
+
+export const changeStatusPet = async (req:Request, res: Response): Promise<Response> => {
+    try {
+
+        const err: Result = validationResult(req);
+
+        if (!err.isEmpty()) return res.status(400).json({
+            status: "FAILED",
+            msg: err.array()[0]?.msg,
+            data: err.array()
+        })
+        
+        const { idPet } = req.params;
+
+        const petObtained: any = await pool.query(findAllByIdPetQuery, [idPet])
+
+        const changedStatus: any = await pool.query(changeStatusPetQuery, [!petObtained[0][0].estadoMascota, idPet])
+
+        return res.status(201).json({
+            status: "OK",
+            msg: "El estado de la mascota se cambió exitosamente",
+            data: changedStatus[0]
         })
         
     } catch (error) {

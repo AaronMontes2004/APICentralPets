@@ -1,4 +1,4 @@
-import { verifyDNIVet, verifyDNIVetRepeat, verifyEmailVet, verifyEmailVetRepeat, verifyIdSex, verifyIdSpecialty, verifyIdVet } from './../../libs/queriesValidation/vetQueryValidation';
+import { verifyAllIdVet, verifyDNIVet, verifyDNIVetRepeat, verifyEmailVet, verifyEmailVetRepeat, verifyIdSex, verifyIdSpecialty, verifyIdVet } from './../../libs/queriesValidation/vetQueryValidation';
 import pool from "./../../database";
 import { body, param } from "express-validator";
 
@@ -64,6 +64,14 @@ export const updateVetValidation = [
 export const findByIdVetValidation = [
     param("idVet").notEmpty().withMessage("El id del veterinario no puede estar vacio").isInt().withMessage("El id del veterinario debe ser un número entero").custom(async(value) => {
         const res: any = await pool.query(verifyIdVet, [value])
+        if (res[0].length === 0) throw new Error("El veterinario no existe")
+        return true
+    })
+]
+
+export const changeStatusVetValidation = [
+    param("idVet").notEmpty().withMessage("El id del veterinario no puede estar vacio").isInt().withMessage("El id del veterinario debe ser un número entero").custom(async(value) => {
+        const res: any = await pool.query(verifyAllIdVet, [value])
         if (res[0].length === 0) throw new Error("El veterinario no existe")
         return true
     })

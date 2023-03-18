@@ -1,6 +1,6 @@
 import { subirImagen } from './../libs/configCloudinary';
 import fs from 'node:fs';
-import { getProductsQuery, addProductQuery, updateProductQuery, findByIdProductQuery } from './../libs/queries/productQuery';
+import { getProductsQuery, addProductQuery, updateProductQuery, findByIdProductQuery, changeStatusProductQuery, findAllByIdProductQuery } from './../libs/queries/productQuery';
 import pool from "./../database";
 import { Request, Response } from "express";
 import { Result, validationResult } from 'express-validator';
@@ -125,6 +125,39 @@ export const findByIdProduct = async (req: Request,res: Response) => {
             data: productObtained[0][0]
         })
 
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: "FAILED",
+            msg: "Error interno del sistema",
+            data: error
+        })
+    }
+}
+
+export const changeStatusProduct = async (req: Request,res: Response): Promise<Response> => {
+    try {
+
+        const err: Result = validationResult(req)
+
+        if(!err.isEmpty()) return res.status(400).json({
+            status: "FAILED",
+            msg: err.array()[0]?.msg,
+            data: err.array()
+        })
+
+        const {idProduct} = req.params 
+        
+        const productObtained: any = await pool.query(findAllByIdProductQuery, [idProduct]);
+
+        const changedStatus: any = await pool.query(changeStatusProductQuery, [!productObtained[0][0].estadoProducto, idProduct])
+
+        return res.status(201).json({
+            status: "OK",
+            msg: "El estado del producto se cambió exitosamente",
+            data: changedStatus[0]
+        })
+        
     } catch (error) {
         console.log(error);
         return res.status(500).json({
