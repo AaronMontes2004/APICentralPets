@@ -1,5 +1,5 @@
 import { v2 as cloudinary, UploadApiResponse } from "cloudinary"
-import fs from "node:fs"
+import fs from "fs"
 
 const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } = process.env
 
