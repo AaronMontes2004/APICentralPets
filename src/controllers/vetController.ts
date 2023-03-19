@@ -1,5 +1,5 @@
 import { subirImagen } from './../libs/configCloudinary';
-import fs from 'node:fs';
+import fs from 'fs';
 import { getVetsQuery, addVetQuery, updateVetQuery, findByIdVetQuery, changeStatusVetQuery, findAllByIdVetQuery } from './../libs/queries/vetQuery';
 import pool from "./../database";
 import { Request, Response } from "express";

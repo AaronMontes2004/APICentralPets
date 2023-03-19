@@ -1,5 +1,5 @@
 import { subirImagen } from './../libs/configCloudinary';
-import fs from 'node:fs';
+import fs from 'fs';
 import { getProductsQuery, addProductQuery, updateProductQuery, findByIdProductQuery, changeStatusProductQuery, findAllByIdProductQuery } from './../libs/queries/productQuery';
 import pool from "./../database";
 import { Request, Response } from "express";

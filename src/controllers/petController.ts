@@ -1,4 +1,4 @@
-import fs from 'node:fs';
+import fs from 'fs';
 import { UploadApiResponse } from 'cloudinary';
 import { subirImagen } from './../libs/configCloudinary';
 import { Result } from 'express-validator';
