@@ -72,7 +72,7 @@ export const addPetValidationAndroid = [
         }
         throw new Error("El usuario no existe")
     }),
-    body("photoPet").notEmpty().withMessage("La imagen no puede estar vacio").isBase64().withMessage("La imagen debe ser en formato base64")
+    body("photoPet").notEmpty().withMessage("La imagen no puede estar vacio")//.isBase64().withMessage("La imagen debe ser en formato base64")
 ] 
 
 export const updatePetValidation = [
