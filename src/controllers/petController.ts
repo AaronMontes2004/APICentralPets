@@ -109,11 +109,6 @@ export const addPetAndroid = async( req:Request, res:Response) => {
             data: addedPet[0]
         });
         
-
-        return res.status(201).json({
-            status: "OK"
-        })
-        
     } catch (error) {
         console.log(error);
         return res.status(500).json({
