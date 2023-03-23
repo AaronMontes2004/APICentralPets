@@ -1,3 +1,4 @@
+import path from 'path';
 import express, { Application, Request, Response } from "express";
 import cors from "cors"
 import morgan from "morgan";
@@ -32,6 +33,10 @@ app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 app.use(passport.initialize())
 passport.use(strategyPassport)
+
+// static files
+
+app.use(express.static(path.join(__dirname, "public")))
 
 // Routes
 app.get("/", passport.authenticate("jwt", {session: false}), (req: Request,res: Response): Response => {

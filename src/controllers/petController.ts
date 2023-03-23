@@ -93,9 +93,9 @@ export const addPetAndroid = async( req:Request, res:Response) => {
 
         const { namePet = "", agePet = "", sexPet = "", weightPet = "", idSpecies = "", idUser = "", photoPet = "" } = req.body;
 
-        let buff = new Buffer(photoPet, "base64");
+        let buff = Buffer.from(photoPet, "base64");
 
-        let imagePath = path.join(__dirname, "./../public/base64/img.png")
+        let imagePath = path.join(__dirname, "./../public/base64/img.png") //path.join(__dirname, "./../public/base64/img.png")
 
         await fs.writeFileSync(imagePath, buff)
 
