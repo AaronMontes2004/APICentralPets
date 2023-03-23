@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from "path"
 import { UploadApiResponse } from 'cloudinary';
 import { subirImagen } from './../libs/configCloudinary';
 import { Result } from 'express-validator';
@@ -68,6 +69,50 @@ export const addPet = async(req: Request,res: Response): Promise<Response> => {
             msg: "La mascota se registró correctamente",
             data: addedPet[0]
         });
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: "FAILED",
+            msg: "Error interno del sistema",
+            data: error
+        })
+    }
+}
+
+export const addPetAndroid = async( req:Request, res:Response) => {
+    try {
+
+        const err: Result = validationResult(req);
+
+        if (!err.isEmpty()) return res.status(400).json({
+            status: "FAILED",
+            msg: err.array()[0]?.msg,
+            data: err.array()
+        })
+
+        const { namePet = "", agePet = "", sexPet = "", weightPet = "", idSpecies = "", idUser = "", photoPet = "" } = req.body;
+
+        let buff = new Buffer(photoPet, "base64");
+
+        let imagePath = path.join(__dirname, "./../public/base64/img.png")
+
+        await fs.writeFileSync(imagePath, buff)
+
+        const imagenSubida: UploadApiResponse = await subirImagen(imagePath);
+        
+        const addedPet: any = await pool.query(addPetQuery, [namePet, agePet, sexPet, weightPet, imagenSubida.secure_url, idSpecies, idUser])
+
+        return res.status(201).json({
+            status: "OK",
+            msg: "La mascota se registró correctamente",
+            data: addedPet[0]
+        });
+        
+
+        return res.status(201).json({
+            status: "OK"
+        })
         
     } catch (error) {
         console.log(error);

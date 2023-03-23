@@ -3,7 +3,6 @@ import multer, { Multer } from "multer"
 
 const storage = multer.diskStorage({
     destination: (req: Request,file: Express.Multer.File ,cb) => {
-        console.log("aea");
         cb(null, "./src/public/img")
     },
     filename: (req: Request,file: Express.Multer.File,cb) => {
