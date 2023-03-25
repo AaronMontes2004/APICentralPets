@@ -73,3 +73,11 @@ export const changeStatusUserValidation = [
         return true;
     })
 ]
+
+export const findByEmailUserValidation = [
+    param("emailUser").notEmpty().withMessage("El correo del usuario no puede estar vacio").isEmail().withMessage("El correo no tiene el formato correcto").custom(async(value) => {
+        const res: any = await pool.query(verifyEmailUser, [value]);
+        if (res[0].length === 0) throw new Error("El usuario no existe")
+        return true;
+    })
+]

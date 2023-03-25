@@ -4,7 +4,7 @@ import pool from "../database";
 import { Request, Response } from "express";
 import { encryptPassword } from "../libs/functions";
 import { validationResult } from "express-validator/src/validation-result";
-import { changeStatusUserQuery, findAllByIdUserQuery, findByIdUserQuery, getUsersQuery, signupUserQuery } from '../libs/queries/userQuery';
+import { changeStatusUserQuery, findAllByIdUserQuery, findByEmailUserQuery, findByIdUserQuery, getUsersQuery, signupUserQuery } from '../libs/queries/userQuery';
 import jwt from "jsonwebtoken";
 
 export const getUsers = async (req: Request,res: Response) => {
@@ -148,6 +148,36 @@ export const changeStatusUser = async (req: Request,res: Response): Promise<Resp
             data: changedStatus[0]
         })
         
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: "FAILED",
+            msg: "Error interno del sistema",
+            data: error
+        })
+    }
+}
+
+export const findByEmailUser = async (req:Request, res: Response) => {
+    try {
+
+        const err: Result = validationResult(req);
+
+        if (!err.isEmpty()) return res.status(400).json({
+            status: "FAILED",
+            msg: err.array()[0]?.msg,
+            data: err.array()
+        })
+
+        const { emailUser } = req.params;
+
+        const obtainedUser: any = await pool.query(findByEmailUserQuery, [emailUser])
+
+        return res.status(201).json({
+            status: "OK",
+            msg: "Se obtuvo el usuario correctamente",
+            data: obtainedUser[0]
+        })
     } catch (error) {
         console.log(error);
         return res.status(500).json({

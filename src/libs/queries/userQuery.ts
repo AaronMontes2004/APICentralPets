@@ -8,3 +8,5 @@ export const findByIdUserQuery: string = "SELECT * FROM usuario WHERE idUsuario 
 export const findAllByIdUserQuery: string = "SELECT * FROM usuario WHERE idUsuario = ?"
 
 export const changeStatusUserQuery: string = "UPDATE usuario SET estadoUsuario = ? WHERE idUsuario = ?"
+
+export const findByEmailUserQuery: string = "SELECT * FROM usuario WHERE correoUsuario = ? AND estadoUsuario = 1"
