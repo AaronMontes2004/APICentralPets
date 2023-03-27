@@ -1,3 +1,4 @@
+import { addPetQuery } from './../libs/queries/petQuery';
 import { subirImagen } from './../libs/configCloudinary';
 import fs from 'fs';
 import { getProductsQuery, addProductQuery, updateProductQuery, findByIdProductQuery, changeStatusProductQuery, findAllByIdProductQuery } from './../libs/queries/productQuery';
@@ -5,6 +6,7 @@ import pool from "./../database";
 import { Request, Response } from "express";
 import { Result, validationResult } from 'express-validator';
 import { UploadApiResponse } from 'cloudinary';
+import path from "path"
 
 export const getProducts = async (req: Request,res: Response): Promise<Response> => {
     try {
@@ -63,6 +65,45 @@ export const addProduct = async(req: Request,res: Response): Promise<Response> =
             data: addedProduct[0]
         })
 
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: "FAILED",
+            msg: "Error interno del sistema",
+            data: error
+        })
+    }
+}
+
+export const addProductAndroid = async( req:Request, res:Response) => {
+    try {
+
+        const err: Result = validationResult(req);
+
+        if (!err.isEmpty()) return res.status(400).json({
+            status: "FAILED",
+            msg: err.array()[0]?.msg,
+            data: err.array()
+        })
+
+        const {nameProduct, descriptionProduct, stockProduct, priceProduct, idCategory, idBrand, photoProduct } = req.body;
+
+        let buff = Buffer.from(photoProduct, "base64");
+
+        let imagePath = path.join(__dirname, "../../dist/public/base64/img.png")
+
+        await fs.writeFileSync(imagePath, buff)
+
+        const imagenSubida: UploadApiResponse = await subirImagen(imagePath);
+        
+        const addedPet: any = await pool.query(addProductQuery, [nameProduct, descriptionProduct, stockProduct, priceProduct, imagenSubida.secure_url, idCategory, idBrand])
+
+        return res.status(201).json({
+            status: "OK",
+            msg: "El producto se registró correctamente",
+            data: addedPet[0]
+        });
+        
     } catch (error) {
         console.log(error);
         return res.status(500).json({

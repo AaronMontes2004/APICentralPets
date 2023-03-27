@@ -1,4 +1,5 @@
 import { subirImagen } from './../libs/configCloudinary';
+import path from "path"
 import fs from 'fs';
 import { getVetsQuery, addVetQuery, updateVetQuery, findByIdVetQuery, changeStatusVetQuery, findAllByIdVetQuery } from './../libs/queries/vetQuery';
 import pool from "./../database";
@@ -64,6 +65,45 @@ export const addVet = async(req: Request,res: Response): Promise<Response> => {
             msg: "Se registró el veterinario correctamente",
             data: addedVet[0]
         })
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: "FAILED",
+            msg: "Error interno del sistema",
+            data: error
+        })
+    }
+}
+
+export const addVetAndroid = async( req:Request, res:Response) => {
+    try {
+
+        const err: Result = validationResult(req);
+
+        if (!err.isEmpty()) return res.status(400).json({
+            status: "FAILED",
+            msg: err.array()[0]?.msg,
+            data: err.array()
+        })
+
+        const {nameVet, lastnameVet, dniVet, phoneVet, addressVet, emailVet, idSpecialty, idSex, photoVet} = req.body;
+
+        let buff = Buffer.from(photoVet, "base64");
+
+        let imagePath = path.join(__dirname, "../../dist/public/base64/img.png")
+
+        await fs.writeFileSync(imagePath, buff)
+
+        const imagenSubida: UploadApiResponse = await subirImagen(imagePath);
+        
+        const addedPet: any = await pool.query(addVetQuery, [nameVet, lastnameVet, dniVet, phoneVet, addressVet, emailVet, imagenSubida.secure_url, idSpecialty, idSex])
+
+        return res.status(201).json({
+            status: "OK",
+            msg: "El producto se registró correctamente",
+            data: addedPet[0]
+        });
         
     } catch (error) {
         console.log(error);
