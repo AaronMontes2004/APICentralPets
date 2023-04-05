@@ -36,15 +36,18 @@ export const loginUser = async (req: Request, res: Response): Promise<Response> 
             status: "FAILED",
             msg: err.array()[0]?.msg,
             data: err.array()
-        })
+        })  
 
         const userFound: any = await pool.query(verifyEmailUser, [req.body?.emailUser]);
 
         const token: string = jwt.sign({id: userFound[0][0].idUsuario}, process.env.JWT_SECRET || "central_pets", {expiresIn: "7d"})
+
+        const obtainedUser: any = await pool.query(findByIdUserQuery, [userFound[0][0].idUsuario]) 
         
         return res.status(200).json({
             status: "OK",
             msg: "Ingresó al sistema exitosamente",
+            user: obtainedUser[0][0],
             token: token
         })
     } catch (error) {
@@ -77,10 +80,13 @@ export const signupUser = async (req: Request,res: Response): Promise<Response> 
 
         const token: string = jwt.sign({id: addedUser[0].insertId}, process.env.JWT_SECRET || "central_pets", {expiresIn: "7d"})
 
+        const obtainedUser: any = await pool.query(findByIdUserQuery, [addedUser[0].insertId])
+
         return res.status(201).json({
             status: "OK",
             msg: "Fué registrado exitosamente",
             data: addedUser[0],
+            user: obtainedUser[0][0],
             token
         })
 
@@ -178,6 +184,19 @@ export const findByEmailUser = async (req:Request, res: Response) => {
             msg: "Se obtuvo el usuario correctamente",
             data: obtainedUser[0]
         })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: "FAILED",
+            msg: "Error interno del sistema",
+            data: error
+        })
+    }
+}
+
+export const verifyToken = (req: Request, res: Response) => {
+    try {
+        res.status(200).send("Authorized")
     } catch (error) {
         console.log(error);
         return res.status(500).json({
