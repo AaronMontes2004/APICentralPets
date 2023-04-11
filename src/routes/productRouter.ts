@@ -1,5 +1,6 @@
+import { findByIdCategoryValidation } from './../middlewares/validations/categoryValidation';
 import { addProductValidation, addProductValidationAndroid, changeStatusProductValidation, findByIdProductValidation, updateProductValidation } from './../middlewares/validations/productValidation';
-import { getProducts, addProduct, updateProduct, findByIdProduct, changeStatusProduct, addProductAndroid, updateProductAndroid } from './../controllers/productController';
+import { getProducts, addProduct, updateProduct, findByIdProduct, changeStatusProduct, addProductAndroid, updateProductAndroid, findProductsByIdCategory } from './../controllers/productController';
 import { Router } from 'express';
 import upload from './../libs/configMulter';
 
@@ -16,6 +17,8 @@ productRouter.put("/updateProduct/:idProduct", updateProductValidation, updatePr
 productRouter.put("/android/updateProduct/:idProduct", updateProductValidation, updateProductAndroid)
 
 productRouter.get("/findById/:idProduct", findByIdProductValidation, findByIdProduct)
+
+productRouter.get("/findByIdCategory/:idCategory", findByIdCategoryValidation, findProductsByIdCategory)
 
 productRouter.put("/changeStatus/:idProduct", changeStatusProductValidation, changeStatusProduct)
 

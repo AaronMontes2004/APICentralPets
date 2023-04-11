@@ -1,7 +1,7 @@
 import { addPetQuery } from './../libs/queries/petQuery';
 import { subirImagen } from './../libs/configCloudinary';
 import fs from 'fs';
-import { getProductsQuery, addProductQuery, updateProductQuery, findByIdProductQuery, changeStatusProductQuery, findAllByIdProductQuery, updateProductAndroidQuery } from './../libs/queries/productQuery';
+import { getProductsQuery, addProductQuery, updateProductQuery, findByIdProductQuery, changeStatusProductQuery, findAllByIdProductQuery, updateProductAndroidQuery, findProductsByIdCategoryQuery } from './../libs/queries/productQuery';
 import pool from "./../database";
 import { Request, Response } from "express";
 import { Result, validationResult } from 'express-validator';
@@ -166,6 +166,37 @@ export const findByIdProduct = async (req: Request,res: Response) => {
             data: productObtained[0][0]
         })
 
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: "FAILED",
+            msg: "Error interno del sistema",
+            data: error
+        })
+    }
+}
+
+export const findProductsByIdCategory = async(req: Request, res:Response): Promise<Response> => {
+    try {
+
+        const err: Result = validationResult(req)
+
+        if(!err.isEmpty()) return res.status(400).json({
+            status: "FAILED",
+            msg: err.array()[0]?.msg,
+            data: err.array()
+        })
+
+        const {idCategory} = req.params 
+
+        const productsObtained: any = await pool.query(findProductsByIdCategoryQuery, [idCategory]);
+
+        return res.status(200).json({
+            status: "OK",
+            msg: "Se obtuvieron los productos exitosamente",
+            data: productsObtained[0]
+        })
+        
     } catch (error) {
         console.log(error);
         return res.status(500).json({

@@ -8,6 +8,8 @@ export const updateProductAndroidQuery: string = "UPDATE producto SET nombreProd
 
 export const findByIdProductQuery: string = "SELECT * FROM producto WHERE idProducto = ? AND estadoProducto = 1"
 
+export const findProductsByIdCategoryQuery: string = "SELECT * FROM producto WHERE idCategoria = ? AND estadoProducto = 1"
+
 export const findAllByIdProductQuery: string = "SELECT * FROM producto WHERE idProducto = ?"
 
 export const changeStatusProductQuery: string = "UPDATE producto SET estadoProducto = ? WHERE idProducto = ?"
