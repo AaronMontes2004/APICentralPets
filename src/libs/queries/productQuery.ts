@@ -4,6 +4,8 @@ export const addProductQuery: string = "INSERT INTO producto(nombreProducto, des
 
 export const updateProductQuery: string = "UPDATE producto SET nombreProducto = ?, descripcionProducto = ?, stockProducto = ?, precioProducto = ?, idCategoria = ?, idMarca = ? WHERE idProducto = ?"
 
+export const updateProductAndroidQuery: string = "UPDATE producto SET nombreProducto = ?, descripcionProducto = ?, stockProducto = ?, precioProducto = ?, idCategoria = ?, idMarca = ?, imagenProducto = ? WHERE idProducto = ?"
+
 export const findByIdProductQuery: string = "SELECT * FROM producto WHERE idProducto = ? AND estadoProducto = 1"
 
 export const findAllByIdProductQuery: string = "SELECT * FROM producto WHERE idProducto = ?"

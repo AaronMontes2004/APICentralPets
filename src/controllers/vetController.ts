@@ -1,7 +1,7 @@
 import { subirImagen } from './../libs/configCloudinary';
 import path from "path"
 import fs from 'fs';
-import { getVetsQuery, addVetQuery, updateVetQuery, findByIdVetQuery, changeStatusVetQuery, findAllByIdVetQuery } from './../libs/queries/vetQuery';
+import { getVetsQuery, addVetQuery, updateVetQuery, findByIdVetQuery, changeStatusVetQuery, findAllByIdVetQuery, updateVetAndroidQuery } from './../libs/queries/vetQuery';
 import pool from "./../database";
 import { Request, Response } from "express";
 import { Result, validationResult } from 'express-validator';
@@ -201,6 +201,52 @@ export const changeStatusVet = async(req: Request,res: Response): Promise<Respon
             data: changedStatus[0]
         })
         
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: "FAILED",
+            msg: "Error interno del sistema",
+            data: error
+        })
+    }
+}
+
+export const updateVetAndroid = async (req: Request,res: Response): Promise<Response> => {
+    try {
+
+        const err: Result = validationResult(req);
+
+        if (!err.isEmpty()) return res.status(400).json({
+            status: "FAILED",
+            msg: err.array()[0]?.msg,
+            data: err.array()
+        })
+
+        let updatedVet: any = null
+
+        const { idVet } = req.params
+        const { nameVet, lastnameVet, dniVet, phoneVet, addressVet, emailVet, idSpecialty, idSex, photoVet = "" } = req.body;
+
+        if (photoVet){
+            let buff = Buffer.from(photoVet, "base64");
+
+            let imagePath = path.join(__dirname, "../../dist/public/base64/img.png")
+
+            await fs.writeFileSync(imagePath, buff)
+
+            const imagenSubida: UploadApiResponse = await subirImagen(imagePath);
+
+            updatedVet = await pool.query(updateVetAndroidQuery, [nameVet, lastnameVet, dniVet, phoneVet, addressVet, emailVet, idSpecialty, idSex, imagenSubida.secure_url, idVet])
+        } else {
+            updatedVet = await pool.query(updateVetQuery, [nameVet, lastnameVet, dniVet, phoneVet, addressVet, emailVet, idSpecialty, idSex, idVet])
+        }
+
+        return res.status(201).json({
+            status: "OK",
+            msg: "Se actualizó el veterinario correctamente",
+            data: updatedVet[0]
+        })
+
     } catch (error) {
         console.log(error);
         return res.status(500).json({

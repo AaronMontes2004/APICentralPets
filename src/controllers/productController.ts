@@ -1,7 +1,7 @@
 import { addPetQuery } from './../libs/queries/petQuery';
 import { subirImagen } from './../libs/configCloudinary';
 import fs from 'fs';
-import { getProductsQuery, addProductQuery, updateProductQuery, findByIdProductQuery, changeStatusProductQuery, findAllByIdProductQuery } from './../libs/queries/productQuery';
+import { getProductsQuery, addProductQuery, updateProductQuery, findByIdProductQuery, changeStatusProductQuery, findAllByIdProductQuery, updateProductAndroidQuery } from './../libs/queries/productQuery';
 import pool from "./../database";
 import { Request, Response } from "express";
 import { Result, validationResult } from 'express-validator';
@@ -197,6 +197,52 @@ export const changeStatusProduct = async (req: Request,res: Response): Promise<R
             status: "OK",
             msg: "El estado del producto se cambió exitosamente",
             data: changedStatus[0]
+        })
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: "FAILED",
+            msg: "Error interno del sistema",
+            data: error
+        })
+    }
+}
+
+export const updateProductAndroid = async (req: Request, res: Response): Promise<Response> => {
+    try {
+
+        const err: Result = validationResult(req)
+
+        if(!err.isEmpty()) return res.status(400).json({
+            status: "FAILED",
+            msg: err.array()[0]?.msg,
+            data: err.array()
+        })
+
+        const {idProduct} = req.params 
+        const { nameProduct, descriptionProduct, stockProduct, priceProduct, idCategory, idBrand, photoProduct } = req.body;
+
+        let updatedProduct: any = null
+
+        if (photoProduct){
+            let buff = Buffer.from(photoProduct, "base64");
+
+            let imagePath = path.join(__dirname, "../../dist/public/base64/img.png")
+
+            await fs.writeFileSync(imagePath, buff)
+
+            const imagenSubida: UploadApiResponse = await subirImagen(imagePath);
+
+            updatedProduct = await pool.query(updateProductAndroidQuery, [nameProduct, descriptionProduct, stockProduct, priceProduct, idCategory, idBrand, imagenSubida.secure_url, idProduct])
+        } else {
+            updatedProduct = await pool.query(updateProductQuery, [nameProduct, descriptionProduct, stockProduct, priceProduct, idCategory, idBrand, idProduct])
+        }
+
+        return res.status(201).json({
+            status: "OK",
+            msg: "El producto se actualizó correctamente",
+            data: updatedProduct[0]
         })
         
     } catch (error) {
