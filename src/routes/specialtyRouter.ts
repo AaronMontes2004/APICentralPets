@@ -5,11 +5,11 @@ import passport from 'passport';
 
 const specialtyRouter: Router = Router();
 
-specialtyRouter.get("/", passport.authenticate("jwt", {session: false}), getSpecialties);
+specialtyRouter.get("/", getSpecialties);
 
-specialtyRouter.post("/addSpecialty", [passport.authenticate("jwt", {session: false}),addSpecialtyValidation], addSpecialty);
+specialtyRouter.post("/addSpecialty", addSpecialtyValidation, addSpecialty);
 
-specialtyRouter.put("/updateSpecialty/:idSpecialty", [passport.authenticate("jwt", {session: false}),updateSpecialtyValidation], updateSpecialty)
+specialtyRouter.put("/updateSpecialty/:idSpecialty", updateSpecialtyValidation, updateSpecialty)
 
 specialtyRouter.get("/findById/:idSpecialty", findByIdSpecialtyValidation, findByIdSpecialty)
 
