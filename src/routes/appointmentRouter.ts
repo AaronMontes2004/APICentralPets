@@ -1,5 +1,5 @@
-import { addAppointmentValidation, findByIdAppointmentValidation, updateAppointmentValidation } from './../middlewares/validations/appointmentValidation';
-import { addAppointment, findByIdAppointment, getAppointments, updateAppointment } from './../controllers/appointmentController';
+import { addAppointmentValidation, findAppointmentByIdPetValidation, findByIdAppointmentValidation, updateAppointmentValidation } from './../middlewares/validations/appointmentValidation';
+import { addAppointment, findAppointmentByIdPet, findByIdAppointment, getAppointments, updateAppointment } from './../controllers/appointmentController';
 import { Router } from "express";
 
 const appointmentRouter: Router = Router()
@@ -11,5 +11,7 @@ appointmentRouter.post("/addAppointment", addAppointmentValidation, addAppointme
 appointmentRouter.put("/updateAppointment/:idAppointment", updateAppointmentValidation, updateAppointment)
 
 appointmentRouter.get("/findById/:idAppointment", findByIdAppointmentValidation, findByIdAppointment)
+
+appointmentRouter.get("/findAppointmentByIdPet/:idPet", findAppointmentByIdPetValidation, findAppointmentByIdPet)
 
 export default appointmentRouter

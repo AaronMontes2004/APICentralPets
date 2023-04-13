@@ -3,7 +3,7 @@ export const verifyIdReservation: string = "SELECT * FROM reservacion WHERE idRe
 
 export const verifyIdClinic: string = "SELECT * FROM clinica WHERE idClinica = ?"
 
-export const verifyIdPet: string = "SELECT * FROM mascota WHERE idMascota = ?"
+export const verifyIdPet: string = "SELECT * FROM mascota WHERE idMascota = ? AND estadoMascota = 1"
 
 export const verifyIdVet: string = "SELECT * FROM veterinario WHERE idVeterinario = ?"
 

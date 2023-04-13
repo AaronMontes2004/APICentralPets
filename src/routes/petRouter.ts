@@ -1,5 +1,5 @@
-import { addPetValidation, addPetValidationAndroid, changeStatusPetValidation, findByIdPetValidation, updatePetValidation } from './../middlewares/validations/petValidation';
-import { getPets, addPet, updatePet, findByIdPet, changeStatusPet, addPetAndroid, updatePetAndroid } from './../controllers/petController';
+import { addPetValidation, addPetValidationAndroid, changeStatusPetValidation, findByIdPetValidation, findPetByIdUserValidation, updatePetValidation } from './../middlewares/validations/petValidation';
+import { getPets, addPet, updatePet, findByIdPet, changeStatusPet, addPetAndroid, updatePetAndroid, findPetsByIdUser } from './../controllers/petController';
 import { Router } from "express";
 import upload from './../libs/configMulter';
 
@@ -16,6 +16,8 @@ petRouter.put("/updatePet/:idPet", updatePetValidation, updatePet)
 petRouter.put("/android/updatePet/:idPet", updatePetValidation, updatePetAndroid)
 
 petRouter.get("/findById/:idPet", findByIdPetValidation, findByIdPet)
+
+petRouter.get("/findPetsByIdUser/:idUser", findPetByIdUserValidation, findPetsByIdUser)
 
 petRouter.put("/changeStatus/:idPet", changeStatusPetValidation, changeStatusPet)
 

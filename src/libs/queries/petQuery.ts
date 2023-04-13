@@ -11,3 +11,5 @@ export const findByIdPetQuery: string = "SELECT * FROM mascota WHERE idMascota =
 export const findAllByIdPetQuery: string = "SELECT * FROM mascota WHERE idMascota = ?"
 
 export const changeStatusPetQuery: string = "UPDATE mascota SET estadoMascota = ? WHERE idMascota = ?"
+
+export const findPetsByIdUserQuery: string = "SELECT * FROM mascota WHERE idUsuario = ? AND estadoMascota = 1"

@@ -5,3 +5,5 @@ export const addAppointmentQuery: string = "INSERT INTO cita(fechaCreacionCita, 
 export const updateAppointmentQuery: string = "UPDATE cita SET descripcionCita = ?, idReservacion = ?, idClinica = ?, idMascota = ?, idVeterinario = ?, idTipoCita = ? WHERE idCita = ?"
 
 export const findByIdAppointmentQuery: string = "SELECT * FROM cita WHERE idCita = ?"
+
+export const findAppointmentByIdPetQuery: string = "SELECT * FROM cita WHERE idMascota = ?"

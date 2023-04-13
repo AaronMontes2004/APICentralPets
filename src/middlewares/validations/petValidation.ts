@@ -131,3 +131,11 @@ export const changeStatusPetValidation = [
         return true;
     })
 ]
+
+export const findPetByIdUserValidation = [
+    param("idUser").notEmpty().withMessage("El id del usuario no puede estar vacio").isInt().withMessage("El id del usuario debe ser un entero").custom(async(value) => {
+        const res: any = await pool.query(verifyIdUser, [value])
+        if (res[0].length === 0) throw new Error("El usuario no existe")
+        return true;
+    })
+]
