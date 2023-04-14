@@ -40,6 +40,7 @@ export const addTreatment = async(req: Request,res: Response): Promise<Response>
         return res.status(201).json({
             status: "OK",
             msg: "Se registró el tratamiento correctamente",
+            idTreatment: addedTreatment[0]?.insertId,
             data: addedTreatment[0]
         })
         

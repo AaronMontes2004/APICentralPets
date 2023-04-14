@@ -40,6 +40,7 @@ export const addDiagnostic = async(req: Request,res: Response): Promise<Response
         return res.status(201).json({
             status: "OK",
             msg: "El diagnóstico se registró correctamente",
+            idDiagnostic: addedDiagnostic[0]?.insertId,
             data: addedDiagnostic[0]
         })
         
