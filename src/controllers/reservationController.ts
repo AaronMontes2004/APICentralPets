@@ -42,6 +42,7 @@ export const addReservation = async (req: Request,res: Response) => {
         return res.status(201).json({
             status: "OK",
             msg: "La reserva se registró exitosamente",
+            idReservation: addedReservation[0]?.insertId,
             data: addedReservation[0]
         })
         
