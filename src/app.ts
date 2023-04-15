@@ -1,3 +1,4 @@
+import { createPaymentIntent } from './controllers/PaymentIntent';
 import path from 'path';
 import express, { Application, Request, Response } from "express";
 import cors from "cors"
@@ -59,6 +60,7 @@ app.use("/api/medicalHistory", medicalHistoryRouter)
 app.use("/api/sale", saleRouter)
 app.use("/api/saleDetail", saleDetailRouter)
 app.use("/api/brand", brandRouter)
+app.post("/api/create-payment-intent", createPaymentIntent)
 
 app.use((req,res) => {
     res.status(404).json({
