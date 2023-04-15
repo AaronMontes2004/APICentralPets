@@ -1,4 +1,4 @@
-export const getAppointmentsQuery: string = "SELECT * FROM cita"
+export const getAppointmentsQuery: string = "SELECT * FROM cita c INNER JOIN reservacion r ON c.idReservacion = r.idReservacion INNER JOIN tipo_cita tc ON c.idTipoCita = tc.idTipoCita"
 
 export const addAppointmentQuery: string = "INSERT INTO cita(fechaCreacionCita, descripcionCita, idReservacion, idClinica, idMascota, idVeterinario, idTipoCita) VALUES (?,?,?,?,?,?,?)"
 
