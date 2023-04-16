@@ -1,4 +1,4 @@
-export const getMedicalHistoryQuery: string = "SELECT * FROM historial_medico"
+export const getMedicalHistoryQuery: string = "SELECT * FROM historial_medico hm INNER JOIN mascota m ON hm.idMascota = m.idMascota INNER JOIN tratamiento t ON hm.idTratamiento = t.idTratamiento INNER JOIN diagnostico d ON hm.idDiagnostico = d.idDiagnostico"
 
 export const addMedicalHistoryQuery: string = "INSERT INTO historial_medico(fechaCreacionHistorial,motivoHistorial, idDiagnostico, idTratamiento, idUsuario, idMascota) VALUES (?,?,?,?,?,?)"
 
