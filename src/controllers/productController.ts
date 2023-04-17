@@ -1,7 +1,7 @@
 import { addPetQuery } from './../libs/queries/petQuery';
 import { subirImagen } from './../libs/configCloudinary';
 import fs from 'fs';
-import { getProductsQuery, addProductQuery, updateProductQuery, findByIdProductQuery, changeStatusProductQuery, findAllByIdProductQuery, updateProductAndroidQuery, findProductsByIdCategoryQuery } from './../libs/queries/productQuery';
+import { getProductsQuery, addProductQuery, updateProductQuery, findByIdProductQuery, changeStatusProductQuery, findAllByIdProductQuery, updateProductAndroidQuery, findProductsByIdCategoryQuery, filterProductsByNameQuery } from './../libs/queries/productQuery';
 import pool from "./../database";
 import { Request, Response } from "express";
 import { Result, validationResult } from 'express-validator';
@@ -274,6 +274,29 @@ export const updateProductAndroid = async (req: Request, res: Response): Promise
             status: "OK",
             msg: "El producto se actualizó correctamente",
             data: updatedProduct[0]
+        })
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: "FAILED",
+            msg: "Error interno del sistema",
+            data: error
+        })
+    }
+}
+
+export const filterProductsByName = async (req: Request, res: Response): Promise<Response> => {
+    try {
+
+        const { productName } = req.params
+
+        const products: any = await pool.query(filterProductsByNameQuery, [productName])
+
+        return res.status(201).json({
+            status: "OK",
+            msg: "El producto se actualizó correctamente",
+            data: products[0]
         })
         
     } catch (error) {

@@ -13,3 +13,5 @@ export const findProductsByIdCategoryQuery: string = "SELECT * FROM producto p I
 export const findAllByIdProductQuery: string = "SELECT * FROM producto WHERE idProducto = ?"
 
 export const changeStatusProductQuery: string = "UPDATE producto SET estadoProducto = ? WHERE idProducto = ?"
+
+export const filterProductsByNameQuery: string = "SELECT * FROM producto p INNER JOIN categoria c ON p.idCategoria = c.idCategoria INNER JOIN marca m ON p.idMarca = m.idMarca WHERE p.estadoProducto = 1 AND p.nombreProducto LIKE CONCAT('%',?,'%')"
